@@ -1459,9 +1459,18 @@ body::after {
    ══════════════════════════════════════════════ */
 .footer {
     text-align: center;
-    padding: var(--space-2xl) 0;
+    padding: var(--space-3xl) var(--space-xl);
     border-top: 1px solid var(--border-subtle);
     margin-top: var(--space-3xl);
+    background: var(--bg-secondary);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
 }
 
 .footer-text {
@@ -1470,13 +1479,40 @@ body::after {
 }
 
 .footer-link {
-    color: var(--primary-400);
+    color: var(--text-secondary);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--transition-fast);
 }
 
 .footer-link:hover {
-    text-decoration: underline;
+    color: var(--primary-500);
+    transform: translateY(-1px);
+}
+
+/* ── Content Styling (Terms/Privacy/Docs) ── */
+.content-text h3 {
+    color: var(--text-primary);
+    margin: var(--space-lg) 0 var(--space-sm);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.content-text p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+}
+
+.content-text ul, .content-text ol {
+    margin-left: var(--space-xl);
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+}
+
+.content-text li {
+    margin-bottom: var(--space-xs);
 }
 
 /* ══════════════════════════════════════════════
@@ -1490,6 +1526,10 @@ body::after {
     .navbar-inner {
         flex-direction: row;
         justify-content: space-between;
+    }
+
+    .footer-links {
+        gap: var(--space-md);
     }
 
     .mobile-toggle {
