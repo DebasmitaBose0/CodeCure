@@ -1520,7 +1520,8 @@ body::after {
     margin-bottom: var(--space-md);
 }
 
-.content-text ul, .content-text ol {
+.content-text ul,
+.content-text ol {
     margin-left: var(--space-xl);
     margin-bottom: var(--space-md);
     color: var(--text-secondary);
@@ -1538,11 +1539,25 @@ body::after {
     margin-top: -2px;
 }
 
-.icon-inline.blue { color: var(--primary-500); }
-.icon-inline.emerald { color: var(--emerald-500); }
-.icon-inline.amber { color: var(--risk-medium); }
-.icon-inline.rose { color: var(--risk-high); }
-.icon-inline.cyan { color: var(--accent-500); }
+.icon-inline.blue {
+    color: var(--primary-500);
+}
+
+.icon-inline.emerald {
+    color: var(--emerald-500);
+}
+
+.icon-inline.amber {
+    color: var(--risk-medium);
+}
+
+.icon-inline.rose {
+    color: var(--risk-high);
+}
+
+.icon-inline.cyan {
+    color: var(--accent-500);
+}
 
 /* ══════════════════════════════════════════════
    RESPONSIVE
@@ -2108,6 +2123,32 @@ body::after {
     font-size: 0.8rem;
 }
 
+.icon-blue {
+    color: var(--primary-500);
+}
+
+.icon-emerald {
+    color: var(--emerald-500);
+}
+
+.icon-amber {
+    color: var(--risk-medium);
+}
+
+.icon-primary {
+    color: var(--primary-400);
+}
+
+.icon-info {
+    width: 14px;
+    display: inline;
+    margin-right: 4px;
+}
+
+.grid-single {
+    grid-template-columns: 1fr;
+}
+
 /* ── Modal System ── */
 .modal-overlay {
     position: fixed;
@@ -2116,6 +2157,7 @@ body::after {
     width: 100%;
     height: 100%;
     background: rgba(15, 23, 42, 0.6);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
@@ -2318,12 +2360,29 @@ body::after {
 }
 
 @keyframes loaderPulse {
-    0%, 100% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.05); filter: brightness(1.1); }
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+    }
 }
 
 @keyframes loaderBarMove {
-    0% { left: -100%; }
-    50% { left: 0; }
-    100% { left: 100%; }
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 0;
+    }
+
+    100% {
+        left: 100%;
+    }
 }
