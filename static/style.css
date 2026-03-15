@@ -1489,7 +1489,7 @@ body::after {
 }
 
 .hero-badge {
-    color: #000000;
+    color: #ffffff;
     font-weight: 700;
 }
 
@@ -1612,42 +1612,71 @@ body::after {
 }
 
 .tech-badge {
-    padding: 4px 12px;
-    border-radius: 6px;
-    margin: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
-.tech-badge.python {
-    background: rgba(59, 91, 255, 0.15);
+.tech-badge img {
+    width: 18px;
+    height: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
-.tech-badge.fastapi {
-    background: rgba(6, 182, 212, 0.15);
+.tech-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.05) !important;
 }
 
-.tech-badge.scikit {
-    background: rgba(16, 185, 129, 0.15);
+.tech-badge.python { background: rgba(59, 130, 246, 0.1); }
+.tech-badge.fastapi { background: rgba(6, 182, 212, 0.1); }
+.tech-badge.scikit { background: rgba(245, 158, 11, 0.1); }
+.tech-badge.sqlalchemy { background: rgba(217, 70, 239, 0.1); }
+.tech-badge.sqlite { background: rgba(56, 189, 248, 0.1); }
+.tech-badge.jinja { background: rgba(185, 28, 28, 0.1); }
+.tech-badge.numpy { background: rgba(77, 124, 255, 0.1); }
+.tech-badge.pandas { background: rgba(15, 0, 150, 0.1); }
+
+/* Action Buttons */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.tech-badge.sqlalchemy {
-    background: rgba(245, 158, 11, 0.15);
+.action-btn:hover {
+    background: var(--emerald-500);
+    color: white;
+    border-color: var(--emerald-400);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-.tech-badge.sqlite {
-    background: rgba(244, 63, 94, 0.15);
+.action-btn i {
+    width: 16px;
+    height: 16px;
 }
 
-.tech-badge.jinja {
-    background: rgba(139, 92, 246, 0.15);
-}
-
-.tech-badge.numpy {
-    background: rgba(59, 91, 255, 0.15);
-}
-
-.tech-badge.pandas {
-    background: rgba(6, 182, 212, 0.15);
-}
+/* Utilities */
+.mt-3xl { margin-top: 6rem; }
 
 .toast i {
     width: 20px;
