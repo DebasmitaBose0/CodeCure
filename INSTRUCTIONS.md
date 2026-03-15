@@ -21,20 +21,27 @@ This document details the setup, training, and deployment processes for the **Co
 ## 2. Local Environment Setup 🛠️
 
 ### Prerequisites
+
 - Python 3.10+
 - `venv` (Virtual Environment)
 
 ### Installation
+
 1. **Navigate to the project folder**:
+
    ```bash
    cd CodeCure
    ```
+
 2. **Setup Environment**:
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # Or venv\Scripts\activate on Windows
    ```
+
 3. **Install Dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -44,9 +51,11 @@ This document details the setup, training, and deployment processes for the **Co
 ## 3. AI Model Training 🧠
 
 Before running the server, you must train the internal AI models:
+
 ```bash
 python train_model.py
 ```
+
 - **Inputs**: `diabetes.csv`
 - **Outputs**: `model/diabetes_model.pkl`, `scaler.pkl`, `feature_names.pkl`
 - **Logic**: Evaluates multiple classifiers and picks the most accurate one.
@@ -58,6 +67,7 @@ python train_model.py
 ```bash
 python -m uvicorn main:app --reload
 ```
+
 Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 ---
@@ -66,13 +76,16 @@ Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 CodeCure is 100% production-ready for **Vercel**.
 
-### Deployment Steps:
+### Deployment Steps
+
 1. **Push to GitHub**: Ensure all files including `vercel.json` and the `model/` directory are pushed.
 2. **Vercel Project**: Import the repository into Vercel.
 3. **Auto-Configuration**: Vercel will detect `main.py` and the Python runtime automatically.
 
-### Database Persistence on Vercel:
+### Database Persistence on Vercel
+
 Because Vercel serverless functions have a read-only filesystem (except `/tmp`), the application follows these rules:
+
 - **Default (Free)**: Uses `/tmp/codecure.db`. Data is stored temporarily and mirrored in your browser's `LocalStorage`.
 - **Permanent (Recommended)**: Connect a **Vercel Postgres** database in the Vercel dashboard. The app will automatically detect `POSTGRES_URL` and use it for permanent, shared storage.
 
@@ -81,6 +94,7 @@ Because Vercel serverless functions have a read-only filesystem (except `/tmp`),
 ## 6. Chatbot Customization 🤖
 
 The chatbot uses `static/codecure_kb.json` as its brain. To add more answers:
+
 1. Open `static/codecure_kb.json`.
 2. Add a new object with `keywords`, `question`, and `answer`.
 3. The chatbot will instantly start recognizing the new keywords.
