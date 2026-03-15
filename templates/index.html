@@ -924,6 +924,7 @@
                 displayResults(result);
                 showToast('AI Analysis completed successfully!', 'success');
                 updateHomeStats();
+                loadDashboard(); // Proactively refresh dashboard
 
             } catch (error) {
                 showToast(`Error: ${error.message}`, 'error');
@@ -1094,7 +1095,28 @@
 
                 const container = document.getElementById('patients-table-container');
 
-                if (dashboardDataStore.length === 0) {
+                if (container) renderDashboardTable(container);
+
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                // Fallback to local history only if fetch fails
+                const localHistory = getLocalHistory();
+                dashboardDataStore = localHistory.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+                
+                const total = dashboardDataStore.length;
+                animateCounter(document.getElementById('dash-total'), total);
+                // ... update other stats similarly or leave as is
+                
+                const container = document.getElementById('patients-table-container');
+                if (container) {
+                     // Trigger re-render with local only
+                     renderDashboardTable(container);
+                }
+            }
+        }
+
+        function renderDashboardTable(container) {
+             if (dashboardDataStore.length === 0) {
                     container.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-state-icon"><i data-lucide="database-backup"></i></div>
@@ -1153,10 +1175,6 @@
                 tableHTML += '</tbody></table></div>';
                 container.innerHTML = tableHTML;
                 lucide.createIcons();
-
-            } catch (error) {
-                console.error('Dashboard error:', error);
-            }
         }
 
         // ────────────────────────────────────────
@@ -1168,15 +1186,16 @@
                 const data = await response.json();
                 
                 const localHistory = getLocalHistory();
-                const serverRecordIds = new Set(data.recent_predictions.map(p => p.id));
+                const serverRecordIds = new Set((data.recent_predictions || []).map(p => p.id));
                 const uniqueLocal = localHistory.filter(p => !serverRecordIds.has(p.id));
-                const total = data.total_patients + uniqueLocal.length;
+                const total = (data.total_patients || 0) + uniqueLocal.length;
                 
-                document.getElementById('stat-total').textContent = total;
+                const statEl = document.getElementById('stat-total');
+                if (statEl) statEl.textContent = total;
             } catch (e) {
-                // Fallback to local only if server fails
                 const localHistory = getLocalHistory();
-                document.getElementById('stat-total').textContent = localHistory.length;
+                const statEl = document.getElementById('stat-total');
+                if (statEl) statEl.textContent = localHistory.length;
             }
         }
 
