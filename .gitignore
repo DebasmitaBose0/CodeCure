@@ -28,8 +28,3 @@ Thumbs.db
 # Environment variables
 .env
 
-# AI Assistant Knowledge Base
-codecure_kb.json
-
-# Scripts
-copy_images.py
