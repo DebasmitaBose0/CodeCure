@@ -793,6 +793,33 @@
             return id;
         }
 
+        // Local Persistence for Serverless Fallback
+        function savePredictionLocally(input, result) {
+            try {
+                const storageKey = 'codecure_history';
+                let history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                
+                const record = {
+                    id: Math.floor(Math.random() * 9000) + 1000,
+                    name: input.name || 'Anonymous',
+                    age: input.age,
+                    glucose: input.glucose,
+                    bmi: input.bmi,
+                    health_score: result.health_score,
+                    risk_level: result.risk_level,
+                    created_at: new Date().toISOString()
+                };
+                
+                history.unshift(record);
+                localStorage.setItem(storageKey, JSON.stringify(history.slice(0, 50)));
+            } catch (e) { console.error("Local save failed:", e); }
+        }
+
+        function getLocalHistory() {
+            try { return JSON.parse(localStorage.getItem('codecure_history') || '[]'); }
+            catch (e) { return []; }
+        }
+
         // ────────────────────────────────────────
         // Tab Navigation
         // ────────────────────────────────────────
@@ -890,6 +917,10 @@
                 }
 
                 const result = await response.json();
+                
+                // Persistence Fallback for Serverless (Save locally)
+                savePredictionLocally(data, result);
+                
                 displayResults(result);
                 showToast('AI Analysis completed successfully!', 'success');
                 updateHomeStats();
@@ -1034,19 +1065,36 @@
                 const response = await fetch(`/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
                 const data = await response.json();
 
-                animateCounter(document.getElementById('dash-total'), data.total_patients);
-                animateCounter(document.getElementById('dash-high-risk'), data.high_risk_count);
-                animateCounter(document.getElementById('dash-low-risk'), data.low_risk_count);
+                // Merge with Local History for Serverless Persistence
+                const localHistory = getLocalHistory();
+                const serverRecordIds = new Set((data.recent_predictions || []).map(p => p.id));
+                const uniqueLocal = localHistory.filter(p => !serverRecordIds.has(p.id));
+                
+                dashboardDataStore = [...(data.recent_predictions || []), ...uniqueLocal].sort((a, b) => 
+                    new Date(b.created_at) - new Date(a.created_at)
+                );
 
-                // For floats/vitals, we use textContent or simple formatting
-                document.getElementById('dash-avg-score').textContent = data.avg_health_score || '—';
-                document.getElementById('dash-avg-glucose').textContent = data.avg_glucose || '—';
-                document.getElementById('dash-avg-bmi').textContent = data.avg_bmi || '—';
+                // Recalculate Stats based on MERGED data (Crucial for Vercel/Serverless)
+                const total = dashboardDataStore.length;
+                const highRisk = dashboardDataStore.filter(p => ['High', 'Critical'].includes(p.risk_level)).length;
+                const lowRisk = total - highRisk;
+                
+                const avgScore = total > 0 ? (dashboardDataStore.reduce((acc, p) => acc + (p.health_score || 0), 0) / total).toFixed(1) : '—';
+                const avgGlucose = total > 0 ? (dashboardDataStore.reduce((acc, p) => acc + (p.glucose || 0), 0) / total).toFixed(1) : '—';
+                const avgBmi = total > 0 ? (dashboardDataStore.reduce((acc, p) => acc + (p.bmi || 0), 0) / total).toFixed(1) : '—';
 
-                dashboardDataStore = data.recent_predictions;
+                animateCounter(document.getElementById('dash-total'), total);
+                animateCounter(document.getElementById('dash-high-risk'), highRisk);
+                animateCounter(document.getElementById('dash-low-risk'), lowRisk);
+                
+                document.getElementById('dash-avg-score').textContent = avgScore;
+                document.getElementById('dash-avg-glucose').textContent = avgGlucose;
+                document.getElementById('dash-avg-bmi').textContent = avgBmi;
+
+
                 const container = document.getElementById('patients-table-container');
 
-                if (data.recent_predictions.length === 0) {
+                if (dashboardDataStore.length === 0) {
                     container.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-state-icon"><i data-lucide="database-backup"></i></div>
@@ -1077,7 +1125,7 @@
                     <tbody>
         `;
 
-                data.recent_predictions.forEach(p => {
+                dashboardDataStore.forEach(p => {
                     const riskClass = (p.risk_level || 'low').toLowerCase();
                     const date = new Date(p.created_at).toLocaleDateString('en-IN', {
                         day: '2-digit', month: 'short', year: 'numeric'
@@ -1118,9 +1166,17 @@
             try {
                 const response = await fetch(`/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
                 const data = await response.json();
-                document.getElementById('stat-total').textContent = data.total_patients;
+                
+                const localHistory = getLocalHistory();
+                const serverRecordIds = new Set(data.recent_predictions.map(p => p.id));
+                const uniqueLocal = localHistory.filter(p => !serverRecordIds.has(p.id));
+                const total = data.total_patients + uniqueLocal.length;
+                
+                document.getElementById('stat-total').textContent = total;
             } catch (e) {
-                // Silently fail
+                // Fallback to local only if server fails
+                const localHistory = getLocalHistory();
+                document.getElementById('stat-total').textContent = localHistory.length;
             }
         }
 
