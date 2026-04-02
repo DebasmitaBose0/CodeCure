@@ -40,7 +40,8 @@ This document details the setup, training, and deployment processes for the **Co
    ```
 
    Edit the `.env` file and add your Groq API key:
-   ```
+
+   ```text
    GROQ_API_KEY=your_actual_groq_api_key_here
    ```
 
