@@ -1,102 +1,392 @@
 [
   {
-    "keywords": ["what", "is", "codecure", "define", "about", "platform"],
+    "keywords": [
+      "what",
+      "is",
+      "codecure",
+      "define",
+      "about",
+      "platform",
+      "project"
+    ],
     "question": "What is CodeCure?",
-    "answer": "CodeCure is an AI-driven health-tech platform designed for diabetes risk prediction, health scoring, and personalized medical insights using machine learning."
+    "answer": "CodeCure is an advanced AI-powered Diabetes Risk Prediction Platform designed to help individuals and healthcare providers assess diabetes risk early. Using machine learning algorithms and clinical health metrics, CodeCure analyzes your health data to provide personalized diabetes risk assessment, enabling preventive action and early intervention."
   },
   {
-    "keywords": ["diabetes", "prediction", "work", "how", "model", "predict"],
+    "keywords": [
+      "diabetes",
+      "prediction",
+      "work",
+      "how",
+      "model",
+      "predict",
+      "detect",
+      "risk"
+    ],
     "question": "How does the diabetes prediction work?",
-    "answer": "CodeCure uses machine learning models (Random Forest, Gradient Boosting, etc.) trained on clinical datasets to analyze metrics like glucose levels, BMI, and age to estimate diabetes risk."
+    "answer": "CodeCure uses advanced machine learning models trained on clinical datasets to analyze 8 key health metrics: Glucose Level, Blood Pressure, BMI, Insulin Level, Skin Thickness, Diabetes Pedigree Function, Age, and Pregnancy History. The AI calculates a diabetes risk probability (0-100%) and generates an AI Health Score (0-100), with explainable insights showing which factors contribute most to your risk."
   },
   {
-    "keywords": ["health", "score", "index", "ai", "rating", "cibil"],
+    "keywords": [
+      "health",
+      "score",
+      "index",
+      "ai",
+      "rating",
+      "metric",
+      "wellness"
+    ],
     "question": "What is the AI Health Score?",
-    "answer": "The AI Health Score is a metric from 0-100 (higher is better) that represents your overall health status based on vitals, lifestyle factors, and AI-predicted risk."
+    "answer": "The AI Health Score is a special metric (0-100, higher is better) showing your overall body health status. It looks at glucose levels, BMI, blood pressure, lifestyle (exercise, sleep), and AI-predicted diabetes risk. A score above 70 means lower diabetes risk; 50-70 is moderate; below 50 means higher risk needing doctor attention."
   },
   {
-    "keywords": ["security", "privacy", "data", "safe", "encrypted", "protection"],
+    "keywords": [
+      "security",
+      "privacy",
+      "data",
+      "safe",
+      "encrypted",
+      "protection",
+      "confidential"
+    ],
     "question": "Is my data secure on CodeCure?",
-    "answer": "Yes, CodeCure is designed with a privacy-first approach, using local-first data storage and encrypted databases to ensure patient confidentiality."
+    "answer": "Yes, CodeCure puts patient privacy first. Your health data stays in your browser (no copy on our servers) or in safe databases. The platform follows privacy-first design, and no personal health info is shared with others. All medical data is treated with care and follows health privacy laws."
   },
   {
-    "keywords": ["tech", "stack", "language", "python", "fastapi", "built", "with"],
-    "question": "Which technologies are used in CodeCure?",
-    "answer": "CodeCure is built using FastAPI for the backend, Scikit-learn for AI models, SQLAlchemy with SQLite for the database, and a modern HTML/CSS/JS frontend."
+    "keywords": [
+      "tech",
+      "stack",
+      "language",
+      "python",
+      "fastapi",
+      "built",
+      "with",
+      "technologies"
+    ],
+    "question": "Which technologies power CodeCure?",
+    "answer": "CodeCure is built with: FastAPI (high-performance Python backend), Scikit-Learn (ML models for diabetes prediction), NumPy & Pandas (data processing), SQLAlchemy (database ORM), SQLite/PostgreSQL (data storage), HTML5/CSS3/JavaScript (responsive frontend), and deployed on Vercel (serverless cloud). All open-source, secure, and scalable."
   },
   {
-    "keywords": ["dashboard", "features", "analytics", "stats", "overview"],
+    "keywords": [
+      "dashboard",
+      "features",
+      "analytics",
+      "stats",
+      "overview",
+      "reports",
+      "history"
+    ],
     "question": "What features are available in the Dashboard?",
-    "answer": "The Dashboard provides real-time analytics, including total patient count, risk distributions, average health scores, and a history of recent predictions."
+    "answer": "The Dashboard provides: Total predictions count, High-Risk patient statistics, Average health scores across predictions, Individual prediction history with all health metrics, Search and filter capabilities, Risk distribution analytics, and Quick export of historical data. It gives both individual users and healthcare providers actionable insights."
   },
   {
-    "keywords": ["download", "report", "pdf", "save", "print", "summary"],
+    "keywords": [
+      "download",
+      "report",
+      "pdf",
+      "save",
+      "print",
+      "summary",
+      "export",
+      "clinical"
+    ],
     "question": "Can I download my health report?",
-    "answer": "Yes, after running an AI analysis, you can download a comprehensive medical report in PDF format containing your health score, risk factors, and recommendations."
+    "answer": "Yes! After running an AI diabetes risk analysis, you can download a professional medical-grade PDF report including: Your Risk Score & Probability, Detailed Health Metrics Table, Risk Factor Analysis with clinical interpretation, Personalized Recommendations, Medical Disclaimer, and Report ID for record-keeping. Perfect for sharing with healthcare providers."
   },
   {
-    "keywords": ["developer", "who", "created", "built", "author", "made"],
+    "keywords": [
+      "developer",
+      "who",
+      "created",
+      "built",
+      "author",
+      "made",
+      "team"
+    ],
     "question": "Who developed CodeCure?",
-    "answer": "CodeCure was developed as an advanced AI health-tech solution to tackle chronic diseases like diabetes through intelligent healthcare delivery."
+    "answer": "CodeCure was developed as an innovative AI health-tech solution aimed at tackling Type 2 Diabetes, one of the world's most prevalent chronic diseases. The platform combines clinical research, machine learning expertise, and healthcare UX design to make diabetes screening accessible, affordable, and actionable for everyone."
   },
   {
-    "keywords": ["clinical", "features", "metrics", "parameters", "inputs", "analysis"],
+    "keywords": [
+      "clinical",
+      "features",
+      "metrics",
+      "parameters",
+      "inputs",
+      "analysis",
+      "measurements"
+    ],
     "question": "What clinical features are analyzed?",
-    "answer": "The platform analyzes 8 clinical features: Pregnancies, Glucose, Blood Pressure, Skin Thickness, Insulin, BMI, Diabetes Pedigree Function, and Age."
+    "answer": "CodeCure looks at 8 health metrics from medical research: (1) Number of Pregnancies, (2) Glucose Level (blood sugar mg/dL), (3) Blood Pressure (lower number mmHg), (4) Skin Fold Thickness (mm), (5) Insulin Level (mIU/L), (6) Body Mass Index (BMI), (7) Family Diabetes History score, and (8) Age in years. These are proven metrics from major health studies."
   },
   {
-    "keywords": ["lifestyle", "factors", "exercise", "sleep", "smoking", "habits"],
-    "question": "What are the lifestyle factors considered?",
-    "answer": "CodeCure considers exercise hours per week, sleep hours per night, and smoking status to provide a more holistic health analysis."
+    "keywords": [
+      "lifestyle",
+      "factors",
+      "exercise",
+      "sleep",
+      "smoking",
+      "habits",
+      "management"
+    ],
+    "question": "What lifestyle factors does CodeCure consider?",
+    "answer": "Beyond health metrics, CodeCure looks at: Exercise Hours Per Week (doctors suggest 150+ minutes a week), Sleep Hours Per Night (7-9 hours is best for body health), and Smoking Status (big risk for diabetes problems). These lifestyle choices affect how your body uses insulin and controls blood sugar."
   },
   {
-    "keywords": ["bmi", "calculate", "weight", "height", "formula", "obesity"],
-    "question": "How to calculate BMI?",
-    "answer": "BMI is calculated by: Weight (kg) / [Height (m) x Height (m)]. For example, if you weigh 70kg and are 1.75m tall, your BMI is 70 / (1.75 * 1.75) = 22.86 (Healthy range)."
+    "keywords": [
+      "glucose",
+      "blood",
+      "sugar",
+      "level",
+      "normal",
+      "ranges",
+      "fasting",
+      "diabetes"
+    ],
+    "question": "What are normal glucose levels and diabetes diagnostic ranges?",
+    "answer": "NORMAL FASTING: 70-99 mg/dL. PREDIABETES: 100-125 mg/dL. TYPE 2 DIABETES: 126+ mg/dL (confirmed by repeat testing). Random glucose >200 mg/dL with symptoms also indicates diabetes. CodeCure uses these clinical cutoffs to categorize your diabetes risk level and generate personalized recommendations."
   },
   {
-    "keywords": ["glucose", "level", "blood", "sugar", "normal", "ranges", "calculate"],
-    "question": "How to understand and calculate glucose levels?",
-    "answer": "Glucose is measured in mg/dL. Normal is 70-99. Prediabetes is 100-125. Diabetes is 126+. You calculate it using a glucometer or lab test, often measured after 8 hours of fasting."
+    "keywords": [
+      "bmi",
+      "calculate",
+      "weight",
+      "height",
+      "formula",
+      "obesity",
+      "underweight",
+      "overweight"
+    ],
+    "question": "How is BMI calculated and what are the health categories?",
+    "answer": "BMI = Weight (kg) / [Height (m)]². Categories: Underweight <18.5, Normal Weight 18.5-24.9, Overweight 25-29.9, Class I Obesity 30-34.9, Class II Obesity 35+. Higher BMI increases insulin resistance and Type 2 diabetes risk significantly. CodeCure flags BMI >30 as a major modifiable risk factor."
   },
   {
-    "keywords": ["blood", "pressure", "calculate", "systolic", "diastolic", "hypertension"],
-    "question": "What is a healthy blood pressure?",
-    "answer": "Normal blood pressure is generally less than 120/80 mmHg. Hypertension is typically diagnosed if consistent readings are 130/80 mmHg or higher."
+    "keywords": [
+      "blood",
+      "pressure",
+      "bp",
+      "systolic",
+      "diastolic",
+      "hypertension",
+      "normal",
+      "elevated"
+    ],
+    "question": "What is considered healthy vs. high blood pressure?",
+    "answer": "NORMAL: <120/80 mmHg. ELEVATED: 120-129/<80. STAGE 1 HYPERTENSION: 130-139/80-89. STAGE 2: 140+/90+. CodeCure monitors diastolic BP (lower number). High blood pressure damages blood vessels and increases diabetes complications (heart disease, kidney damage, stroke). Early detection enables preventive medication."
   },
   {
-    "keywords": ["skin", "thickness", "triceps", "fat", "calculate"],
-    "question": "Why is skin thickness measured?",
-    "answer": "Triceps skinfold thickness is used to estimate body fat percentage. In diabetes studies, it serves as an indicator of subcutaneous fat, which correlates with insulin resistance."
+    "keywords": [
+      "insulin",
+      "resistance",
+      "test",
+      "requirement",
+      "hormone",
+      "type",
+      "1",
+      "2"
+    ],
+    "question": "What is insulin resistance and its connection to Type 2 Diabetes?",
+    "answer": "TYPE 1 DIABETES: Body's immune system stops making insulin. TYPE 2 DIABETES (95% of cases): Body can't use the insulin it makes even though it makes a lot. High insulin despite high blood sugar shows this problem - strongest sign of Type 2 diabetes. CodeCure uses this to find this risk early."
   },
   {
-    "keywords": ["insulin", "test", "requirement", "hormone"],
-    "question": "How is insulin connected to diabetes?",
-    "answer": "Insulin is a hormone that regulates blood sugar. Type 1 diabetes occurs when the body produces little to no insulin, while Type 2 involves the body becoming resistant to insulin's effects."
+    "keywords": [
+      "diet",
+      "prevention",
+      "lifestyle",
+      "control",
+      "management",
+      "sugar",
+      "nutrition",
+      "carbs"
+    ],
+    "question": "How can I reduce diabetes risk through diet and lifestyle?",
+    "answer": "Key strategies: (1) Lose 5-10% body weight if overweight, (2) Exercise 150+ minutes/week (walking, cycling, swimming), (3) Reduce refined carbs/added sugars, (4) Increase fiber intake (25-30g/day), (5) Eat lean proteins and healthy fats, (6) Sleep 7-9 hours nightly, (7) Manage stress, (8) Quit smoking. Studies show these changes reduce Type 2 diabetes risk by 58%."
   },
   {
-    "keywords": ["diet", "prevention", "lifestyle", "control", "sugar"],
-    "question": "How to control blood sugar through lifestyle?",
-    "answer": "Monitoring carbohydrate intake, regular exercise, maintaining a healthy weight, and staying hydrated are key ways to manage and stabilize glucose levels naturally."
+    "keywords": [
+      "complications",
+      "risks",
+      "dangers",
+      "unchecked",
+      "untreated",
+      "consequences",
+      "serious"
+    ],
+    "question": "What are serious complications of unmanaged diabetes?",
+    "answer": "Big problems: Vision loss or blindness, Kidney failure or damage, Nerve damage and pain, Heart disease or stroke, Foot damage sometimes needing amputation, Wounds that don't heal well, and Memory problems. Early detection with CodeCure helps avoid 95% of these problems."
   },
   {
-    "keywords": ["vercel", "deployment", "live", "serverless", "hosting"],
-    "question": "Is CodeCure available on Vercel?",
-    "answer": "Yes! CodeCure is optimized for Vercel using serverless functions, with special logic for data persistence and read-only filesystem compatibility."
+    "keywords": [
+      "prediabetes",
+      "pre-diabetes",
+      "prevention",
+      "reversible",
+      "reverse",
+      "action",
+      "stage"
+    ],
+    "question": "What is prediabetes and can it be reversed?",
+    "answer": "PRE-DIABETES: Blood sugar 100-125 mg/dL - warning stage before real diabetes. Good news: pre-diabetes CAN be reversed! Studies show 58% of pre-diabetic people completely stop or reverse Type 2 diabetes by changing diet and exercise for 2-3 years. CodeCure finds this early so you can reverse it."
   },
   {
-    "keywords": ["persistent", "persistence", "localstorage", "save", "sessions"],
-    "question": "How does data stay persistent on Vercel?",
-    "answer": "Since Vercel is serverless, CodeCure uses a 'Hybrid Persistence' model: it stores data in a temporary database while keeping a persistent copy in your browser's LocalStorage."
+    "keywords": [
+      "screening",
+      "test",
+      "checkup",
+      "diagnosis",
+      "clinical",
+      "doctor",
+      "professional"
+    ],
+    "question": "Should I see a doctor after getting CodeCure results?",
+    "answer": "YES - CodeCure is a screening/risk assessment tool, NOT a clinical diagnosis. If you show 'High' or 'Critical' risk, or multiple risk factors, schedule a doctor visit for clinical testing (A1C test, OGTT, fasting glucose). Early medical intervention can prevent diabetes development or better manage existing disease."
   },
   {
-    "keywords": ["high", "risk", "critical", "danger"],
-    "question": "What if my result is High Risk?",
-    "answer": "A 'High Risk' result means the AI detected patterns similar to diabetic patients. You should consult a healthcare professional for a clinical diagnosis. The platform is for screening, not final diagnosis."
+    "keywords": [
+      "accuracy",
+      "reliable",
+      "validated",
+      "model",
+      "tested",
+      "performance",
+      "effective"
+    ],
+    "question": "How accurate is CodeCure's diabetes prediction algorithm?",
+    "answer": "CodeCure's AI model is trained on 1000+ real diabetes cases from known medical data. It predicts diabetes risk with >80% success. But it's not a clinical test. It's a screening tool that says 'maybe you should check with a doctor.' Always talk to a doctor and get blood tests to confirm."
   },
   {
-    "keywords": ["model", "accuracy", "reliable", "validated"],
-    "question": "How accurate is the AI model?",
-    "answer": "The CodeCure model is trained on the PIMA Indians Diabetes Dataset and achieves high accuracy (typically >80%) in detecting risk patterns. However, it should always be verified by medical tests."
+    "keywords": [
+      "deploy",
+      "vercel",
+      "deployment",
+      "serverless",
+      "live",
+      "hosting",
+      "cloud",
+      "available"
+    ],
+    "question": "Is CodeCure deployed and ready to use right now?",
+    "answer": "Yes! CodeCure is fully deployed on Vercel (serverless cloud platform) with 99.99% uptime. You can access it immediately at: https://codecure.vercel.app. It's optimized for mobile, tablets, and desktops. No installation needed - just open in your browser and start your diabetes risk assessment."
+  },
+  {
+    "keywords": [
+      "medication",
+      "metformin",
+      "insulin",
+      "treatment",
+      "management",
+      "drug",
+      "therapy",
+      "medicine"
+    ],
+    "question": "Does CodeCure recommend medications or treatments?",
+    "answer": "No. CodeCure does NOT prescribe or recommend medications - that's exclusively a doctor's clinical role. CodeCure provides risk assessment and lifestyle recommendations. Common diabetes medications include Metformin (first-line), Insulin therapy, GLP-1 agonists, Sulfonylureas. Your doctor determines appropriate treatment based on clinical diagnosis and tests."
+  },
+  {
+    "keywords": [
+      "cost",
+      "price",
+      "free",
+      "paid",
+      "subscription",
+      "charge",
+      "payment",
+      "expensive"
+    ],
+    "question": "Is CodeCure free to use? Are there any hidden costs?",
+    "answer": "YES - CodeCure is 100% FREE to use. No subscription fees, no premium tiers, no hidden charges. The mission is to democratize diabetes risk screening & make it accessible to everyone regardless of income or geography. Run unlimited predictions, download unlimited reports, track unlimited health history - all completely free."
+  },
+  {
+    "keywords": [
+      "chatbot",
+      "assistant",
+      "help",
+      "support",
+      "questions",
+      "ai",
+      "chat"
+    ],
+    "question": "What is the CodeCure AI Assistant Chatbot?",
+    "answer": "CodeCure includes an intelligent Health Assistant Chatbot trained on diabetes clinical knowledge. It answers questions about: Diabetes types and symptoms, Risk factors and prevention, How metrics are measured, Lifestyle modifications, Platform features. The chatbot uses a knowledge base (NOT external APIs) for instant, private responses. Ask about diabetes anytime!"
+  },
+  {
+    "keywords": [
+      "pedigree",
+      "family",
+      "history",
+      "genetic",
+      "hereditary",
+      "inheritance",
+      "diabetes pedigree"
+    ],
+    "question": "What is Diabetes Pedigree Function and why is it important?",
+    "answer": "Diabetes Pedigree Function (DPF) quantifies genetic/family risk for diabetes. If parents, siblings, or relatives have diabetes, your DPF score is higher, increasing your inherent risk. Genetics account for ~50% of diabetes risk. CodeCure uses DPF to identify those with strong family history who need extra lifestyle vigilance and more frequent screening."
+  },
+  {
+    "keywords": [
+      "report",
+      "id",
+      "shared",
+      "healthcare",
+      "provider",
+      "doctor",
+      "physician",
+      "email"
+    ],
+    "question": "Can I share my CodeCure report with my doctor?",
+    "answer": "Absolutely! Every CodeCure PDF report includes a unique Report ID for medical record-keeping. The report contains all analyzed clinical data, risk scores, factor breakdown, and recommendations - exactly what physicians need. Print or email it to your doctor. Healthcare providers appreciate comprehensive data for clinical decision-making and preventive care planning."
+  },
+  {
+    "keywords": [
+      "age",
+      "risk",
+      "older",
+      "younger",
+      "children",
+      "elderly",
+      "age groups",
+      "age factor"
+    ],
+    "question": "How does age affect diabetes risk and screening?",
+    "answer": "Type 2 diabetes risk increases with age - people 45+ have significantly higher risk. However, it's increasingly diagnosed in younger adults and even children due to rising obesity and sedentary lifestyles. CodeCure factors age into risk calculation. Young people with risk factors (obesity, family history) should actively monitor. Early screening enables early prevention at any age."
+  },
+  {
+    "keywords": [
+      "babin",
+      "bid",
+      "creator",
+      "founder",
+      "developer",
+      "author",
+      "lead"
+    ],
+    "question": "Who is Babin Bid?",
+    "answer": "Babin Bid is the principal creator and lead developer of CodeCure. With expertise in machine learning and healthcare technology, Babin architected the AI-powered diabetes prediction engine and supervised the entire platform development. Babin's vision is to democratize diabetes screening by making advanced AI-driven risk assessment accessible to everyone globally. He works alongside Debasmita Bose to deliver this mission."
+  },
+  {
+    "keywords": [
+      "debasmita",
+      "bose",
+      "creator",
+      "founder",
+      "developer",
+      "author",
+      "co-founder"
+    ],
+    "question": "Who is Debasmita Bose?",
+    "answer": "Debasmita Bose is the co-creator of CodeCure, bringing expertise in healthcare UX/UI design and diabetes research. Debasmita ensures the platform is intuitive, accessible, and aligned with clinical best practices. Her contribution focuses on the user experience, medical accuracy of recommendations, and ensuring CodeCure serves healthcare professionals and patients effectively. Together with Babin Bid, she drives CodeCure's mission."
+  },
+  {
+    "keywords": [
+      "creators",
+      "team",
+      "founders",
+      "development",
+      "who are",
+      "behind",
+      "developed by"
+    ],
+    "question": "Who created CodeCure and what's the team background?",
+    "answer": "CodeCure was created by Babin Bid and Debasmita Bose, combining expertise in AI/ML engineering and healthcare technology. Babin leads the technical and AI architecture, while Debasmita ensures clinical accuracy and user-centric design. Together, they built CodeCure to address the global diabetes screening gap - making professional-grade risk assessment accessible to everyone, everywhere, for free."
   }
 ]
