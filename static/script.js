@@ -630,47 +630,85 @@ function downloadPDF() {
 }
 
 function generatePDFReport(data) {
-    const scoreColor = getScoreColor(data.score);
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:100000;background:rgba(255,255,255,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;';
+    // Validate data
+    const score = parseInt(data.score) || 0;
+    const scoreColor = getScoreColor(score);
     
-    overlay.innerHTML = `
-        <div style="margin-bottom:20px;font-weight:bold;color:#10b981;font-size:18px;">📄 Generating Report...</div>
-        <div id="pdf-report-content" style="width:800px;background:white;padding:40px;border:1px solid #e2e8f0;color:#111827;box-sizing:border-box;">
-            <div style="border-bottom:4px solid #10b981;padding-bottom:15px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;">
-                <h1 style="color:#10b981;font-size:32px;margin:0;font-weight:800;">CodeCure AI</h1>
-                <div style="text-align:right;">#CC-${Date.now().toString().slice(-6)}</div>
+    const pdfContent = document.createElement('div');
+    pdfContent.style.cssText = 'width:800px;background:white;padding:40px;border:1px solid #e2e8f0;color:#111827;box-sizing:border-box;font-family:Arial,sans-serif;';
+    pdfContent.id = 'pdf-content-' + Date.now();
+    
+    pdfContent.innerHTML = `
+        <div style="border-bottom:4px solid #10b981;padding-bottom:15px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;">
+            <h1 style="color:#10b981;font-size:32px;margin:0;font-weight:800;">CodeCure AI</h1>
+            <div style="text-align:right;font-size:12px;color:#64748b;">#CC-${Date.now().toString().slice(-6)}</div>
+        </div>
+        <div style="background:#f8fafc;padding:20px;border-radius:10px;margin-bottom:25px;">
+            <h3 style="margin:0;font-size:18px;color:#111827;">${data.name || 'Patient'}</h3>
+            <p style="color:#64748b;margin:5px 0;font-size:14px;">${data.email || 'N/A'} | ${new Date().toLocaleDateString()}</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;margin-bottom:30px;">
+            <div style="background:${scoreColor};color:white;width:80px;height:80px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                <span style="font-size:28px;font-weight:bold;">${score}</span>
+                <span style="font-size:11px;margin-top:3px;">/100</span>
             </div>
-            <div style="background:#f8fafc;padding:20px;border-radius:10px;margin-bottom:25px;">
-                <h3 style="margin:0;">${data.name}</h3>
-                <p style="color:#64748b;">${data.email} | ${new Date().toLocaleDateString()}</p>
+            <div>
+                <h2 style="margin:0;font-size:20px;color:#111827;">${data.risk || 'Unknown'} Risk</h2>
+                <p style="margin:8px 0 0 0;color:#64748b;font-size:14px;">Diabetes Probability: <strong style="color:#ef4444;">${data.probability || '—'}</strong></p>
+                <p style="margin:5px 0 0 0;color:#64748b;font-size:12px;">Generated: ${new Date().toLocaleTimeString()}</p>
             </div>
-            <div style="display:flex;align-items:center;gap:20px;margin-bottom:30px;">
-                <div style="background:${scoreColor};color:white;width:80px;height:80px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;">
-                    <span style="font-size:28px;">${data.score}</span>
-                </div>
-                <div><h2 style="margin:0;">${data.risk} Risk</h2><p>Probability: ${data.probability}</p></div>
-            </div>
-            <div style="border-left:5px solid ${scoreColor};padding:15px;background:#f8fafc;margin-bottom:30px;">
-                <strong>Diagnostic Insight:</strong><p>${data.summary}</p>
-            </div>
-            <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:40px;">© 2026 CodeCure AI - Clinical Summary Only</div>
+        </div>
+        <div style="border-left:5px solid ${scoreColor};padding:15px;background:#f8fafc;margin-bottom:30px;border-radius:0 5px 5px 0;">
+            <strong style="color:#111827;font-size:14px;">Clinical Summary:</strong>
+            <p style="margin:10px 0 0 0;color:#374151;font-size:13px;line-height:1.6;">${data.summary || 'No summary available.'}</p>
+        </div>
+        ${data.factors && data.factors.length > 0 ? `
+        <div style="margin-bottom:25px;">
+            <h3 style="margin:0 0 12px 0;font-size:14px;color:#111827;font-weight:bold;">Risk Factors:</h3>
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                ${data.factors.map(f => `
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:8px;color:#111827;">${f.name || 'N/A'}</td>
+                    <td style="padding:8px;text-align:right;color:#64748b;">${f.value || '—'}</td>
+                    <td style="padding:8px;text-align:right;"><span style="background:${f.status === 'danger' ? '#fee2e2' : f.status === 'warning' ? '#fef3c7' : '#d1fae5'};color:${f.status === 'danger' ? '#991b1b' : f.status === 'warning' ? '#92400e' : '#065f46'};padding:2px 6px;border-radius:3px;font-size:11px;">${f.status || 'normal'}</span></td>
+                </tr>
+                `).join('')}
+            </table>
+        </div>
+        ` : ''}
+        <div style="border-top:2px solid #e2e8f0;padding-top:15px;margin-top:25px;">
+            <p style="font-size:10px;color:#94a3b8;margin:0;text-align:center;">© 2026 CodeCure AI - Diabetes Risk Assessment Report<br/>This is a clinical summary only. Please consult with a healthcare provider.</p>
         </div>
     `;
-
-    document.body.appendChild(overlay);
-    const opt = { 
-        margin:0, filename:`CodeCure_Report_${data.name.replace(/\s+/g,'_')}.pdf`,
-        image:{type:'jpeg',quality:1}, html2canvas:{scale:2, useCORS:true},
-        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'} 
+    
+    document.body.appendChild(pdfContent);
+    pdfContent.style.position = 'absolute';
+    pdfContent.style.left = '-9999px';
+    
+    showToast('Generating PDF...', 'info');
+    
+    const opt = {
+        margin: 5,
+        filename: `CodeCure_Report_${(data.name || 'Patient').replace(/\s+/g,'_')}_${new Date().getTime()}.pdf`,
+        image: {type: 'jpeg', quality: 0.98},
+        html2canvas: {scale: 2, useCORS: true, backgroundColor: '#ffffff'},
+        jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait', compress: true}
     };
 
-    setTimeout(() => {
-        html2pdf().set(opt).from(document.getElementById('pdf-report-content')).save().then(() => {
-            showToast('Report downloaded!', 'success');
-            document.body.removeChild(overlay);
-        }).catch(() => document.body.removeChild(overlay));
-    }, 800);
+    // Use html2pdf reliably
+    html2pdf()
+        .set(opt)
+        .from(pdfContent)
+        .save()
+        .then(() => {
+            showToast('Report downloaded successfully!', 'success');
+            document.body.removeChild(pdfContent);
+        })
+        .catch((error) => {
+            console.error('PDF generation error:', error);
+            showToast('Error generating PDF. Please try again.', 'error');
+            document.body.removeChild(pdfContent);
+        });
 }
 
 function getScoreColor(score) {
