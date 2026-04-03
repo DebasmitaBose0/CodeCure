@@ -838,6 +838,12 @@
         </div>
     </div>
 
+    <!-- Inject environment variables for frontend -->
+    <script>
+        window.ENV = {
+            GROQ_API_KEY: "{{ groq_api_key }}"
+        };
+    </script>
     <script src="/static/script.js"></script>
 </body>
 

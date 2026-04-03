@@ -1,4 +1,4 @@
-# 🩺 CodeCure — AI Health-Tech Platform 🧬
+﻿# 🩺 CodeCure — AI Health-Tech Platform 🧬
 
 > AI-driven health-tech solution for diabetes risk prediction, health scoring, and personalized medical insights powered by machine learning.
 
@@ -61,17 +61,21 @@ To enable shared database storage across all users, connect a **Vercel Postgres*
 git clone https://github.com/KGFCH2/CodeCure.git
 cd CodeCure
 
-# 2. Virtual Env
+# 2. Environment Setup
+cp .env.example .env  # Copy template
+# Edit .env and add your GROQ_API_KEY
+
+# 3. Virtual Env
 python -m venv venv
 source venv/bin/activate  # Or venv\Scripts\activate on Windows
 
-# 3. Dependencies
+# 4. Dependencies
 pip install -r requirements.txt
 
-# 4. Initialize AI
+# 5. Initialize AI
 python train_model.py
 
-# 5. Run Server
+# 6. Run Server
 python -m uvicorn main:app --reload
 ```
 

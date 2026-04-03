@@ -15,6 +15,7 @@ import numpy as np
 import joblib
 from datetime import datetime
 from typing import List
+from dotenv import load_dotenv
 
 from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -28,6 +29,9 @@ from schemas import (
     PredictionRequest, PredictionResponse, RiskFactor,
     PatientRecord, DashboardStats
 )
+
+# Load environment variables
+load_dotenv()
 
 # ──────────────────────────────────────────────
 # App Configuration
@@ -307,7 +311,11 @@ def get_risk_level(probability: float) -> str:
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Serve the main application page."""
-    return templates.TemplateResponse("index.html", {"request": request})
+    groq_api_key = os.getenv("GROQ_API_KEY", "")
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "groq_api_key": groq_api_key
+    })
 
 
 @app.get("/api/health")

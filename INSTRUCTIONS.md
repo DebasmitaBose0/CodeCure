@@ -1,4 +1,4 @@
-# 🏥 CodeCure Local Setup & Vercel Deployment Guide 🚀
+﻿# 🏥 CodeCure Local Setup & Vercel Deployment Guide 🚀
 
 This document details the setup, training, and deployment processes for the **CodeCure AI Health-Tech Platform**.
 
@@ -33,14 +33,28 @@ This document details the setup, training, and deployment processes for the **Co
    cd CodeCure
    ```
 
-2. **Setup Environment**:
+2. **Setup Environment Variables**:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit the `.env` file and add your Groq API key:
+
+   ```text
+   GROQ_API_KEY=your_actual_groq_api_key_here
+   ```
+
+   > **Note**: Get your API key from [Groq Console](https://console.groq.com/keys)
+
+3. **Setup Virtual Environment**:
 
    ```bash
    python -m venv venv
    source venv/bin/activate  # Or venv\Scripts\activate on Windows
    ```
 
-3. **Install Dependencies**:
+4. **Install Dependencies**:
 
    ```bash
    pip install -r requirements.txt
