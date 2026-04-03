@@ -85,8 +85,14 @@ cp .env.example .env
 # Edit .env and add your GROQ_API_KEY from https://console.groq.com/keys
 
 # 5. Run the Application
+
+# Option A: Using Python directly
 python main.py
-# Server starts at http://localhost:8000
+
+# Option B: Using Uvicorn (with auto-reload)
+uvicorn main:app --reload
+
+# Server starts at http://127.0.0.1:8000 or http://localhost:8000
 ```
 
 ### ✅ Verification Checklist

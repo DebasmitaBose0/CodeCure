@@ -55,11 +55,19 @@ Quick setup guide for running CodeCure locally. **For deployment, see [DEPLOYMEN
 
 5. **Start the server**:
 
+   **Option A:** Using Python directly
+
    ```bash
    python main.py
    ```
 
-   Server starts at **<http://localhost:8000>** ✅
+   **Option B:** Using Uvicorn (with auto-reload on file changes)
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+   Server starts at **<http://127.0.0.1:8000>** or **<http://localhost:8000>** ✅
 
 ---
 
