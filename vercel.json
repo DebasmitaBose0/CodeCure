@@ -1,23 +1,24 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python",
-      "config": {
-        "pythonVersion": "3.11"
-      }
-    }
-  ],
+  "buildCommand": "echo 'Frontend static files - no build needed'",
+  "outputDirectory": ".",
+  "env": {
+    "BACKEND_URL": "https://codecure-backend.onrender.com"
+  },
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
       "src": "/(.*)",
-      "dest": "main.py"
+      "dest": "/templates/index.html",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      }
     }
-  ],
-  "functions": {
-    "main.py": {
-      "maxDuration": 60
-    }
-  }
+  ]
 }

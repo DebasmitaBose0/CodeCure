@@ -1,6 +1,10 @@
 // ═══════════════ CODECURE CORE JAVASCRIPT ═══════════════
 // Handles: AI Predictions, Dashboard Analytics, Chatbot, and PDF Generation
 
+// Get backend URL from environment (set by backend template)
+// Fallback to localhost for development
+const BACKEND_URL = window.ENV?.BACKEND_URL || 'http://localhost:8000';
+
 // Initialize Lucide Icons & UI Effects
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -246,7 +250,7 @@ async function handlePrediction(event) {
     }
 
     try {
-        const response = await fetch('/api/predict', {
+        const response = await fetch(`${BACKEND_URL}/api/predict`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -424,7 +428,7 @@ function updateDashboardStats() {
 
 async function loadDashboard() {
     try {
-        const response = await fetch(`/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
+        const response = await fetch(`${BACKEND_URL}/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
         const data = await response.json();
 
         // Merge with Local History for Serverless Persistence
@@ -564,7 +568,7 @@ function closeModal() {
 // ────────────────────────────────────────
 async function updateHomeStats() {
     try {
-        const response = await fetch(`/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
+        const response = await fetch(`${BACKEND_URL}/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
         let serverTotal = 0;
         let serverPredictions = [];
 

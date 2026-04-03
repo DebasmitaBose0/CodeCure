@@ -21,6 +21,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import func, text
 
@@ -40,6 +41,20 @@ app = FastAPI(
     title="CodeCure - AI Health-Tech Platform",
     description="AI-driven health-tech solution for diabetes risk prediction and health management",
     version="1.0.0",
+)
+
+# Add CORS middleware for frontend access from different domains
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://codecure.vercel.app",  # Production Frontend
+        "http://localhost:3000",         # Local Frontend Dev
+        "http://localhost:8000",         # Local Backend
+        "*"                              # Allow all for development
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Mount static files
@@ -313,9 +328,11 @@ async def home(request: Request):
     """Serve the main application page."""
     try:
         groq_api_key = os.getenv("GROQ_API_KEY", "")
+        backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
         return templates.TemplateResponse("index.html", {
             "request": request,
-            "groq_api_key": groq_api_key
+            "groq_api_key": groq_api_key,
+            "backend_url": backend_url
         })
     except Exception as e:
         # Fallback error page
