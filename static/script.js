@@ -627,7 +627,7 @@ async function downloadDashboardPDF(id) {
             {
                 name: 'Glucose Level',
                 value: result.glucose || '—',
-                message: `Blood glucose: ${result.glucose} mg/dL. ${result.glucose > 126 ? '⚠️ Elevated' : 'Normal'}`,
+                message: `Blood glucose: ${result.glucose} mg/dL. ${result.glucose > 126 ? '[ELEVATED]' : 'Normal'}`,
                 status: result.glucose > 140 ? 'danger' : result.glucose > 126 ? 'warning' : 'normal'
             },
             {
@@ -639,7 +639,7 @@ async function downloadDashboardPDF(id) {
             {
                 name: 'Blood Pressure',
                 value: result.blood_pressure || '—',
-                message: `Diastolic: ${result.blood_pressure} mmHg. ${result.blood_pressure > 90 ? '⚠️ Elevated' : 'Normal'}`,
+                message: `Diastolic: ${result.blood_pressure} mmHg. ${result.blood_pressure > 90 ? '[ELEVATED]' : 'Normal'}`,
                 status: result.blood_pressure > 90 ? 'danger' : result.blood_pressure > 80 ? 'warning' : 'normal'
             },
             {
@@ -826,7 +826,7 @@ function generatePDFReport(data) {
     htmlContent += `
 <div style="border-top:2px solid #e2e8f0;padding-top:15px;margin-top:25px;">
     <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:10px 12px;border-radius:4px;margin-bottom:12px;">
-        <p style="margin:0;font-size:9px;color:#92400e;line-height:1.5;"><strong>⚠️ DISCLAIMER:</strong> This is an AI assessment for informational purposes only. NOT a medical diagnosis. Consult a healthcare professional.</p>
+        <p style="margin:0;font-size:9px;color:#92400e;line-height:1.5;"><strong>[DISCLAIMER]</strong> This is an AI assessment for informational purposes only. NOT a medical diagnosis. Consult a healthcare professional.</p>
     </div>
     <table style="width:100%;font-size:9px;color:#64748b;border-collapse:collapse;">
         <tr>
@@ -843,23 +843,51 @@ function generatePDFReport(data) {
     showToast('Generating PDF Report...', 'info');
 
     const options = {
-        margin: 10,
+        margin: [12, 12, 12, 12],
         filename: `CodeCure_Report_${data.name || 'Patient'}_${Date.now()}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, backgroundColor: '#fff' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: {
+            scale: 2,
+            backgroundColor: '#ffffff',
+            logging: false,
+            useCORS: true,
+            allowTaint: true
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
     };
 
+    // Wait for DOM rendering before converting to PDF
     setTimeout(() => {
-        html2pdf().set(options).from(pdfContainer).save().then(() => {
-            showToast('Report downloaded successfully!', 'success');
-            document.body.removeChild(pdfContainer);
-        }).catch(err => {
-            console.error('PDF Error:', err);
-            showToast('PDF generation failed. Try again.', 'error');
-            if (document.body.contains(pdfContainer)) document.body.removeChild(pdfContainer);
-        });
-    }, 300);
+        try {
+            // Ensure all content is loaded and rendered
+            const element = pdfContainer;
+
+            // Use html2pdf with proper error handling
+            html2pdf()
+                .set(options)
+                .from(element)
+                .save()
+                .then(() => {
+                    showToast('Report downloaded successfully!', 'success');
+                    if (document.body.contains(pdfContainer)) {
+                        document.body.removeChild(pdfContainer);
+                    }
+                })
+                .catch(err => {
+                    console.error('PDF Generation Error:', err);
+                    showToast('PDF generation failed. Please try again.', 'error');
+                    if (document.body.contains(pdfContainer)) {
+                        document.body.removeChild(pdfContainer);
+                    }
+                });
+        } catch (error) {
+            console.error('PDF Error:', error);
+            showToast('Error generating PDF. Please try again.', 'error');
+            if (document.body.contains(pdfContainer)) {
+                document.body.removeChild(pdfContainer);
+            }
+        }
+    }, 500);
 }
 
 function getScoreColor(score) {

@@ -37,7 +37,7 @@
       "wellness"
     ],
     "question": "What is the AI Health Score?",
-    "answer": "The AI Health Score is a proprietary metric (0-100, higher is better) representing your overall metabolic health status. It considers glucose levels, BMI, blood pressure, lifestyle factors (exercise, sleep), and AI-predicted diabetes risk. A score above 70 indicates lower diabetes risk; 50-70 is moderate; below 50 indicates higher risk requiring medical attention."
+    "answer": "The AI Health Score is a special metric (0-100, higher is better) showing your overall body health status. It looks at glucose levels, BMI, blood pressure, lifestyle (exercise, sleep), and AI-predicted diabetes risk. A score above 70 means lower diabetes risk; 50-70 is moderate; below 50 means higher risk needing doctor attention."
   },
   {
     "keywords": [
@@ -50,7 +50,7 @@
       "confidential"
     ],
     "question": "Is my data secure on CodeCure?",
-    "answer": "Yes, CodeCure prioritizes patient privacy and data security. Your health data is stored either in your browser's LocalStorage (no server copy) or in encrypted databases. The platform follows privacy-first design principles, and no personal health information is shared with third parties. All medical data is treated with HIPAA-aligned confidentiality standards."
+    "answer": "Yes, CodeCure puts patient privacy first. Your health data stays in your browser (no copy on our servers) or in safe databases. The platform follows privacy-first design, and no personal health info is shared with others. All medical data is treated with care and follows health privacy laws."
   },
   {
     "keywords": [
@@ -117,7 +117,7 @@
       "measurements"
     ],
     "question": "What clinical features are analyzed?",
-    "answer": "CodeCure analyzes 8 clinically validated features: (1) Number of Pregnancies (PIMA study correlation), (2) Glucose Level (fasting blood sugar mg/dL), (3) Blood Pressure (diastolic mmHg), (4) Triceps Skin Thickness (mm), (5) Serum Insulin Level (mIU/L), (6) Body Mass Index (BMI kg/m²), (7) Diabetes Pedigree Function (family history weighted score), and (8) Age in years. These are gold-standard metrics from major diabetes epidemiological research."
+    "answer": "CodeCure looks at 8 health metrics from medical research: (1) Number of Pregnancies, (2) Glucose Level (blood sugar mg/dL), (3) Blood Pressure (lower number mmHg), (4) Skin Fold Thickness (mm), (5) Insulin Level (mIU/L), (6) Body Mass Index (BMI), (7) Family Diabetes History score, and (8) Age in years. These are proven metrics from major health studies."
   },
   {
     "keywords": [
@@ -130,7 +130,7 @@
       "management"
     ],
     "question": "What lifestyle factors does CodeCure consider?",
-    "answer": "Beyond clinical metrics, CodeCure analyzes: Exercise Hours Per Week (WHO recommends 150+ minutes of moderate activity), Sleep Hours Per Night (7-9 hours optimal for metabolic health), and Smoking Status (major risk factor for diabetes complications). These lifestyle factors significantly impact insulin sensitivity and blood sugar regulation."
+    "answer": "Beyond health metrics, CodeCure looks at: Exercise Hours Per Week (doctors suggest 150+ minutes a week), Sleep Hours Per Night (7-9 hours is best for body health), and Smoking Status (big risk for diabetes problems). These lifestyle choices affect how your body uses insulin and controls blood sugar."
   },
   {
     "keywords": [
@@ -186,7 +186,7 @@
       "2"
     ],
     "question": "What is insulin resistance and its connection to Type 2 Diabetes?",
-    "answer": "TYPE 1 DIABETES: Autoimmune condition - pancreas produces little/no insulin. TYPE 2 DIABETES (95% of cases): Body becomes resistant to insulin's effects despite producing it. High serum insulin despite elevated glucose indicates insulin resistance - strongest predictor of Type 2 diabetes. CodeCure uses this pattern to detect metabolic syndrome risk early."
+    "answer": "TYPE 1 DIABETES: Body's immune system stops making insulin. TYPE 2 DIABETES (95% of cases): Body can't use the insulin it makes even though it makes a lot. High insulin despite high blood sugar shows this problem - strongest sign of Type 2 diabetes. CodeCure uses this to find this risk early."
   },
   {
     "keywords": [
@@ -213,7 +213,7 @@
       "serious"
     ],
     "question": "What are serious complications of unmanaged diabetes?",
-    "answer": "Major complications: Diabetic Retinopathy (vision loss/blindness), Diabetic Nephropathy (kidney failure), Diabetic Neuropathy (nerve damage, pain), Cardiovascular Disease (heart attack, stroke), Diabetic Foot (amputations), Poor Wound Healing, Cognitive Decline/Dementia. Early detection via CodeCure enables timely intervention to prevent 95% of these complications."
+    "answer": "Big problems: Vision loss or blindness, Kidney failure or damage, Nerve damage and pain, Heart disease or stroke, Foot damage sometimes needing amputation, Wounds that don't heal well, and Memory problems. Early detection with CodeCure helps avoid 95% of these problems."
   },
   {
     "keywords": [
@@ -226,7 +226,7 @@
       "stage"
     ],
     "question": "What is prediabetes and can it be reversed?",
-    "answer": "PREDIABETES: Fasting glucose 100-125 mg/dL - a warning stage before diabetes. The good news: prediabetes IS reversible! Studies show 58% of prediabetic individuals completely prevent/reverse Type 2 diabetes through lifestyle changes (diet + exercise) within 2-3 years. CodeCure identifies prediabetes early to enable this reversal."
+    "answer": "PRE-DIABETES: Blood sugar 100-125 mg/dL - warning stage before real diabetes. Good news: pre-diabetes CAN be reversed! Studies show 58% of pre-diabetic people completely stop or reverse Type 2 diabetes by changing diet and exercise for 2-3 years. CodeCure finds this early so you can reverse it."
   },
   {
     "keywords": [
@@ -252,7 +252,7 @@
       "effective"
     ],
     "question": "How accurate is CodeCure's diabetes prediction algorithm?",
-    "answer": "CodeCure's ML model is trained on the PIMA Indians Diabetes Dataset - a gold-standard clinical dataset with 1000+ documented diabetes cases. It achieves >80% accuracy in detecting diabetes risk patterns and complications risk. However, it complements, never replaces, clinical diagnosis. Always confirm results with a healthcare provider and clinical blood tests."
+    "answer": "CodeCure's AI model is trained on 1000+ real diabetes cases from known medical data. It predicts diabetes risk with >80% success. But it's not a clinical test. It's a screening tool that says 'maybe you should check with a doctor.' Always talk to a doctor and get blood tests to confirm."
   },
   {
     "keywords": [

@@ -521,6 +521,17 @@ body::after {
     box-shadow: 0 5px 15px rgba(59, 91, 255, 0.3);
 }
 
+.section-icon.white-bg {
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+}
+
+.section-icon.white-bg:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
 .section-icon.cyan {
     background: rgba(6, 182, 212, 0.15);
     color: #06b6d4;
@@ -856,6 +867,16 @@ i[data-lucide="x"] {
     font-size: 0.75rem;
     color: var(--text-muted);
     margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.hint-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: #10b981;
 }
 
 /* Information Banner */

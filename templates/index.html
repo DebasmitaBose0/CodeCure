@@ -86,7 +86,7 @@
                     </h1>
                     <p class="hero-subtitle">
                         CodeCure uses advanced machine learning to predict chronic disease risk,
-                        generate explainable insights, and deliver personalized health recommendations —
+                        show clear reasons for predictions, and deliver personalized health tips —
                         all in real time.
                     </p>
                     <div class="btn-group">
@@ -125,7 +125,7 @@
                     <div class="section-icon blue"><i data-lucide="zap"></i></div>
                     <div>
                         <h2 class="section-title">Platform Capabilities</h2>
-                        <p class="section-description">AI-driven modules for comprehensive healthcare intelligence</p>
+                        <p class="section-description">AI tools for complete healthcare intelligence</p>
                     </div>
                 </div>
 
@@ -144,9 +144,9 @@
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon emerald"><i data-lucide="search"></i></div>
-                        <h3 class="feature-title">Explainable AI (XAI)</h3>
-                        <p class="feature-desc">No black boxes. Every prediction comes with clear reasons — which
-                            factors contributed and how much they impact your risk.</p>
+                        <h3 class="feature-title">AI Shows How It Works</h3>
+                        <p class="feature-desc">No hidden steps. Every prediction shows clear reason — which
+                            factors matter and how much they affect your risk.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon amber"><i data-lucide="clipboard-list"></i></div>
@@ -163,8 +163,8 @@
                     <div class="feature-card">
                         <div class="feature-icon violet"><i data-lucide="shield-check"></i></div>
                         <h3 class="feature-title">Privacy-First Design</h3>
-                        <p class="feature-desc">Built with healthcare compliance in mind — encrypted data, role-based
-                            access, and comprehensive audit logging.</p>
+                        <p class="feature-desc">Built with healthcare laws in mind — safe data, clear access rules,
+                            and complete safety records.</p>
                     </div>
                 </div>
             </section>
@@ -178,7 +178,7 @@
                     <div>
                         <h2 class="section-title">AI Diabetes Risk Prediction</h2>
                         <p class="section-description">Enter patient health metrics for AI-powered risk analysis with
-                            explainable results</p>
+                            clear results</p>
                     </div>
                 </div>
 
@@ -189,11 +189,11 @@
                             <i data-lucide="info"></i>
                         </div>
                         <div class="info-banner-text">
-                            <strong>💡 How to Get These Values:</strong>
-                            <span>Most metrics require a doctor's visit. Common sources: Annual checkup, home glucose
-                                meter, pharmacy BP machine, BMI calculator online. If you don't have exact values, ask
-                                your doctor or use estimated defaults. The more accurate, the better the
-                                prediction!</span>
+                            <strong>How to Get These Values:</strong>
+                            <span>Most values come from a doctor visit or home devices. Common places: Doctor checkup,
+                                home glucose meter, pharmacy blood pressure machine, online BMI calculator. If you don't
+                                have exact numbers, ask your doctor or use standard defaults. More accurate numbers =
+                                better prediction!</span>
                         </div>
                     </div>
 
@@ -233,106 +233,111 @@
                                     *</label>
                                 <input type="number" class="form-input" id="input-age" placeholder="e.g. 35" required
                                     min="1" max="120">
-                                <div class="form-hint">👤 Your current age in whole years. Higher age increases diabetes
-                                    risk.</div>
+                                <div class="form-hint"><i data-lucide="user" class="hint-icon"></i> Your age in whole
+                                    years. Older age increases diabetes risk.</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i data-lucide="droplet" class="label-icon"></i> Glucose Level
                                     *</label>
                                 <input type="number" class="form-input" id="input-glucose" placeholder="e.g. 110"
                                     required min="0" max="300" step="0.1">
-                                <div class="form-hint">💧 Blood sugar level after 8-hour fast (mg/dL). Get from doctor
-                                    or home glucose meter. Normal: 70-100, Prediabetes: 100-125, Diabetes: 126+</div>
+                                <div class="form-hint"><i data-lucide="droplet" class="hint-icon"></i> Blood sugar level
+                                    after 8 hours without eating (mg/dL). Get from doctor or home glucose meter. Normal:
+                                    70-100, Pre-diabetes: 100-125, Diabetes: 126+</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i data-lucide="weight" class="label-icon"></i> BMI *</label>
                                 <input type="number" class="form-input" id="input-bmi" placeholder="e.g. 26.5" required
                                     min="10" max="70" step="0.1">
-                                <div class="form-hint">⚖️ BMI = Weight(kg) ÷ Height(m)². Calculate online or ask doctor.
-                                    Normal: 18.5-24.9, Overweight: 25-29.9, Obese: 30+</div>
+                                <div class="form-hint"><i data-lucide="weight" class="hint-icon"></i> BMI = Weight(kg) ÷
+                                    Height(m)². Calculate online or ask doctor. Normal: 18.5-24.9, Overweight: 25-29.9,
+                                    Obese: 30+</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i data-lucide="heart-pulse" class="label-icon"></i> Blood
                                     Pressure</label>
                                 <input type="number" class="form-input" id="input-bp" placeholder="e.g. 72" value="72"
                                     min="0" max="200" step="0.1">
-                                <div class="form-hint">❤️ Diastolic blood pressure (lower number, mm Hg). Measure at
-                                    doctor's office or pharmacy. Normal: <80, Elevated: 80-89, High: 90+</div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="baby" class="label-icon"></i>
-                                        Pregnancies</label>
-                                    <input type="number" class="form-input" id="input-pregnancies" placeholder="0"
-                                        value="0" min="0" max="20">
-                                    <div class="form-hint">👶 Total number of pregnancies (for females). Leave as 0 if
-                                        not applicable. Used to identify gestational diabetes risk.</div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="layers" class="label-icon"></i> Skin
-                                        Thickness</label>
-                                    <input type="number" class="form-input" id="input-skin" placeholder="20" value="20"
-                                        min="0" max="100" step="0.1">
-                                    <div class="form-hint">📏 Triceps skin fold thickness (mm). Measured at doctor's
-                                        office using calipers. Reflects body fat percentage. Leave as 20 if unknown.
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="syringe" class="label-icon"></i> Insulin
-                                        Level</label>
-                                    <input type="number" class="form-input" id="input-insulin" placeholder="80"
-                                        value="80" min="0" max="900" step="0.1">
-                                    <div class="form-hint">💉 2-hour serum insulin after glucose test (mu U/ml). Get
-                                        from doctor after glucose tolerance test. Indicates insulin resistance. Normal:
-                                        12-150.</div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="dna" class="label-icon"></i> Diabetes
-                                        Pedigree</label>
-                                    <input type="number" class="form-input" id="input-dpf" placeholder="0.47"
-                                        value="0.47" min="0" max="3" step="0.001">
-                                    <div class="form-hint">🧬 Family history of diabetes scoring (genetic risk factor).
-                                        Higher = more relatives with diabetes. Get from doctor or assess family history.
-                                        Use 0.47 if unsure.</div>
+                                <div class="form-hint"><i data-lucide="heart-pulse" class="hint-icon"></i> Bottom blood
+                                    pressure number (mm Hg). Measure at doctor or pharmacy. Normal: Less than 80,
+                                    Elevated: 80-89, High: 90+</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="baby" class="label-icon"></i>
+                                    Pregnancies</label>
+                                <input type="number" class="form-input" id="input-pregnancies" placeholder="0" value="0"
+                                    min="0" max="20">
+                                <div class="form-hint"><i data-lucide="baby" class="hint-icon"></i> Total number of
+                                    pregnancies (for females). Use 0 if not applicable. Helps identify pregnancy-related
+                                    diabetes risk.</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="layers" class="label-icon"></i> Skin
+                                    Thickness</label>
+                                <input type="number" class="form-input" id="input-skin" placeholder="20" value="20"
+                                    min="0" max="100" step="0.1">
+                                <div class="form-hint"><i data-lucide="ruler" class="hint-icon"></i> Skin fold thickness
+                                    measured at the back of arm (mm). Measured at doctor using special tool. Shows body
+                                    fat level. Use 20 if you don't know.
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="syringe" class="label-icon"></i> Insulin
+                                    Level</label>
+                                <input type="number" class="form-input" id="input-insulin" placeholder="80" value="80"
+                                    min="0" max="900" step="0.1">
+                                <div class="form-hint"><i data-lucide="syringe" class="hint-icon"></i> Insulin level 2
+                                    hours after glucose test (mu U/ml). Get from doctor after glucose test. Shows
+                                    insulin resistance. Normal: 12-150.</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="dna" class="label-icon"></i> Diabetes
+                                    Pedigree</label>
+                                <input type="number" class="form-input" id="input-dpf" placeholder="0.47" value="0.47"
+                                    min="0" max="3" step="0.001">
+                                <div class="form-hint"><i data-lucide="dna" class="hint-icon"></i> Family diabetes
+                                    history score (genetic risk). Higher = more family members have diabetes. Ask your
+                                    doctor or check family history. Use 0.47 if unsure.</div>
+                            </div>
+                        </div>
 
-                            <!-- Lifestyle -->
-                            <p class="lifestyle-header">
-                                <i data-lucide="person-standing"></i> Lifestyle Factors
-                            </p>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="dumbbell" class="label-icon"></i> Exercise
-                                        (hrs/week)</label>
-                                    <input type="number" class="form-input" id="input-exercise" placeholder="3"
-                                        value="3" min="0" max="40" step="0.5">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="moon" class="label-icon"></i> Sleep
-                                        (hrs/night)</label>
-                                    <input type="number" class="form-input" id="input-sleep" placeholder="7" value="7"
-                                        min="0" max="16" step="0.5">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label"><i data-lucide="cigarette-off" class="label-icon"></i>
-                                        Smoking
-                                        Status</label>
-                                    <label class="form-toggle">
-                                        <input type="checkbox" id="input-smoking">
-                                        <span class="toggle-switch"></span>
-                                        <span class="toggle-label">Currently smoking</span>
-                                    </label>
-                                </div>
+                        <!-- Lifestyle -->
+                        <p class="lifestyle-header">
+                            <i data-lucide="person-standing"></i> Lifestyle Factors
+                        </p>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="dumbbell" class="label-icon"></i> Exercise
+                                    (hrs/week)</label>
+                                <input type="number" class="form-input" id="input-exercise" placeholder="3" value="3"
+                                    min="0" max="40" step="0.5">
                             </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="moon" class="label-icon"></i> Sleep
+                                    (hrs/night)</label>
+                                <input type="number" class="form-input" id="input-sleep" placeholder="7" value="7"
+                                    min="0" max="16" step="0.5">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i data-lucide="cigarette-off" class="label-icon"></i>
+                                    Smoking
+                                    Status</label>
+                                <label class="form-toggle">
+                                    <input type="checkbox" id="input-smoking">
+                                    <span class="toggle-switch"></span>
+                                    <span class="toggle-label">Currently smoking</span>
+                                </label>
+                            </div>
+                        </div>
 
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-primary" id="predict-btn">
-                                    <span class="btn-text"><i data-lucide="sparkles"></i> Run AI Analysis</span>
-                                </button>
-                                <button type="button" class="btn btn-secondary" onclick="resetForm()">
-                                    <i data-lucide="rotate-ccw"></i> Reset Form
-                                </button>
-                            </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary" id="predict-btn">
+                                <span class="btn-text"><i data-lucide="sparkles"></i> Run AI Analysis</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                <i data-lucide="rotate-ccw"></i> Reset Form
+                            </button>
+                        </div>
                     </form>
                 </div>
             </section>
@@ -395,13 +400,13 @@
                     </div>
                 </div>
 
-                <!-- Risk Factors (Explainable AI) -->
+                <!-- Risk Factors (AI Shows Reasons) -->
                 <div class="section">
                     <div class="section-header">
                         <div class="section-icon amber"><i data-lucide="search-code"></i></div>
                         <div>
-                            <h2 class="section-title">Explainable AI — Risk Factor Breakdown</h2>
-                            <p class="section-description">Understand exactly why the AI made its prediction</p>
+                            <h2 class="section-title">AI Shows Risk Factors</h2>
+                            <p class="section-description">Understand exactly why AI made its prediction</p>
                         </div>
                     </div>
                     <div class="risk-factors-grid" id="risk-factors-grid">
@@ -435,7 +440,7 @@
                     <div class="section-icon blue"><i data-lucide="line-chart"></i></div>
                     <div>
                         <h2 class="section-title">Analytics Dashboard</h2>
-                        <p class="section-description">Real-time overview of patient data and AI predictions</p>
+                        <p class="section-description">Real-time view of patient data and AI predictions</p>
                     </div>
                 </div>
 
@@ -512,8 +517,8 @@
                         About <span class="gradient-text">CodeCure</span>
                     </h1>
                     <p class="hero-subtitle">
-                        An AI-driven health-tech platform designed to enhance healthcare delivery,
-                        patient engagement, and health literacy through intelligent machine learning systems.
+                        An AI health app made to improve doctor care,
+                        help patients get better health, and teach people about health using smart machine learning.
                     </p>
                 </div>
             </section>
@@ -525,8 +530,8 @@
                         <h3 class="feature-title">Architecture</h3>
                         <p class="feature-desc">
                             Built with <strong>FastAPI</strong> backend, <strong>Scikit-learn</strong> AI engine,
-                            <strong>SQLite</strong> database, and a premium <strong>HTML/CSS/JS</strong> frontend.
-                            Designed for scalability from MVP to production.
+                            <strong>SQLite</strong> database, and premium <strong>HTML/CSS/JS</strong> frontend.
+                            Designed to grow from start to large scale.
                         </p>
                     </div>
                     <div class="feature-card">
@@ -551,8 +556,10 @@
                         <div class="feature-icon amber"><i data-lucide="shield-check"></i></div>
                         <h3 class="feature-title">Privacy & Compliance</h3>
                         <p class="feature-desc">
-                            Designed with <strong>HIPAA</strong> and <strong>India's DPDP Act</strong> in mind.
-                            Local-first data storage, no external data sharing, and role-based access architecture.
+                            Designed with healthcare laws in mind (<strong>HIPAA</strong> and <strong>India's DPDP
+                                Act</strong>).
+                            Data stays on your device except when needed for analysis. Clear access controls for
+                            different users.
                         </p>
                     </div>
                     <div class="feature-card">
@@ -623,7 +630,7 @@
         <div class="tab-content" id="tab-terms">
             <section class="section">
                 <div class="section-header">
-                    <div class="section-icon blue"><i data-lucide="file-text" class="icon-blue"></i></div>
+                    <div class="section-icon blue white-bg"><i data-lucide="file-text" class="icon-blue"></i></div>
                     <div>
                         <h2 class="section-title">Terms of Service</h2>
                         <p class="section-description">Legal framework for using the CodeCure platform</p>
@@ -704,11 +711,10 @@
                             predictive insights into chronic conditions like diabetes.</p>
                     </div>
                     <div class="card">
-                        <h3><i data-lucide="target" class="icon-inline emerald"></i> How accurate are the predictions?
+                        <h3>How accurate are the predictions?
                         </h3>
-                        <p>Our models achieve high accuracy on clinical datasets. However, AI predictions are
-                            probabilistic and should only be used as a preliminary screening tool, not a final
-                            diagnosis.</p>
+                        <p>Our models work well on medical data. But AI predictions are just estimates and should only
+                            be used as first screening, not final diagnosis.</p>
                     </div>
                     <div class="card">
                         <h3><i data-lucide="lock" class="icon-inline cyan"></i> Is my health data secure?</h3>
@@ -744,7 +750,7 @@
         <div class="tab-content" id="tab-docs">
             <section class="section">
                 <div class="section-header">
-                    <div class="section-icon blue"><i data-lucide="book-open" class="icon-primary"></i></div>
+                    <div class="section-icon blue white-bg"><i data-lucide="book-open" class="icon-primary"></i></div>
                     <div>
                         <h2 class="section-title">Documentation</h2>
                         <p class="section-description">Technical details and usage guide</p>
@@ -760,7 +766,7 @@
                         <ol>
                             <li><strong>Data Input:</strong> Users provide vitals and medical metrics.</li>
                             <li><strong>AI Analysis:</strong> Our Random Forest and Neural models process the data.</li>
-                            <li><strong>Explainable AI:</strong> The system explains which factors (like BMI or Glucose)
+                            <li><strong>AI Shows Results:</strong> The system shows which factors (like BMI or Glucose)
                                 impacted the score.</li>
                             <li><strong>Reporting:</strong> Users can download a detailed PDF report of their scores.
                             </li>
@@ -768,7 +774,7 @@
 
                         <h3><i data-lucide="layers" class="icon-inline cyan"></i> Technical Architecture</h3>
                         <ul>
-                            <li><strong>Backend:</strong> FastAPI for high-performance async processing.</li>
+                            <li><strong>Backend:</strong> FastAPI for fast async processing.</li>
                             <li><strong>Frontend:</strong> Vanilla JS with a custom CSS design system.</li>
                             <li><strong>Database:</strong> SQLite for local persistence, Vercel Postgres for production.
                             </li>
