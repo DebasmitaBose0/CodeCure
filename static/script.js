@@ -28,41 +28,48 @@ function toggleAccordion(button) {
     // Toggle current item
     item.classList.toggle('active');
 }
-        const statusEl = loader ? loader.querySelector('.loader-status') : null;
 
-        if (loader) {
-            // Cycle status messages for a more "AI" feel during the 2.5s wait
-            if (statusEl) {
-                const messages = [
-                    "Initializing AI Diagnostics...",
-                    "Connecting to Neural Core...",
-                    "Analyzing Clinical Patterns...",
-                    "Optimizing Secure Data Stream..."
-                ];
-                let i = 0;
-                const msgInterval = setInterval(() => {
-                    if (i < messages.length - 1) {
-                        i++;
-                        statusEl.style.opacity = '0';
-                        setTimeout(() => {
-                            statusEl.textContent = messages[i];
-                            statusEl.style.opacity = '1';
-                        }, 200);
-                    } else {
-                        clearInterval(msgInterval);
-                    }
-                }, 600);
-            }
+// ────────────────────────────────────────
+// Page Loader & Initialization
+// ────────────────────────────────────────
+function hideLoader() {
+    const loader = document.getElementById('page-loader');
+    const statusEl = loader ? loader.querySelector('.loader-status') : null;
 
-            setTimeout(() => {
-                loader.classList.add('fade-out');
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 600);
-            }, 2500);
+    if (loader) {
+        // Cycle status messages for a more "AI" feel during the 2.5s wait
+        if (statusEl) {
+            const messages = [
+                "Initializing AI Diagnostics...",
+                "Connecting to Neural Core...",
+                "Analyzing Clinical Patterns...",
+                "Optimizing Secure Data Stream..."
+            ];
+            let i = 0;
+            const msgInterval = setInterval(() => {
+                if (i < messages.length - 1) {
+                    i++;
+                    statusEl.style.opacity = '0';
+                    setTimeout(() => {
+                        statusEl.textContent = messages[i];
+                        statusEl.style.opacity = '1';
+                    }, 200);
+                } else {
+                    clearInterval(msgInterval);
+                }
+            }, 600);
         }
-    };
 
+        setTimeout(() => {
+            loader.classList.add('fade-out');
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 600);
+        }, 2500);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
     if (document.readyState === 'complete') {
         hideLoader();
     } else {
@@ -85,7 +92,8 @@ function toggleAccordion(button) {
     });
 
     // Initialize specific components
-    updateHomeStats();
+    // NOTE: updateHomeStats() is intentionally NOT called here to ensure a clean state
+    // on first visit. User stats will update only after they perform a prediction.
     initSlideshows();
     loadKnowledgeBase();
 
@@ -128,7 +136,6 @@ function toggleAccordion(button) {
             }
         });
     }
-});
 
 // ────────────────────────────────────────
 // State Management
