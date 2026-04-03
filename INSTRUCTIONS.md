@@ -1,20 +1,21 @@
-﻿# 🏥 CodeCure Local Setup & Vercel Deployment Guide 🚀
+﻿# ⚗️ CodeCure Chemical Toxicity Prediction — Setup & Deployment Guide 🚀
 
-This document details the setup, training, and deployment processes for the **CodeCure AI Health-Tech Platform**.
+This document details the setup, training, and deployment processes for the **CodeCure AI Chemical Toxicity Prediction Platform**.
 
 ---
 
 ## 1. Project Features 🌟
 
-- **AI Prediction**: Real-time diabetes risk assessment using optimized ML models.
-- **AI Health Score**: A unique 0-100 metric for instant health status visibility.
-- **Explainable AI (XAI)**: Breakdown of risk factors informing the AI's decision.
-- **Smart Dashboard**: High-level analytics with a detailed patient history table.
-- **Patient Details Modal**: **[NEW]** Click a patient in the dashboard to see a summarized AI breakdown in a modal window.
-- **AI Assistant**: **[NEW]** Local knowledge-based chatbot for answering CodeCure and health-related questions.
-- **Hospital-Grade Reports**: One-page clinical PDF generation for easy sharing/printing.
-- **Optimized Performance**: Core logic separated into `script.js` for faster loading and cleaner code.
-- **Hybrid Persistence**: Optimized for serverless; data survives resets via `LocalStorage`.
+- **Toxicity Prediction**: Real-time chemical toxicity assessment using advanced ML models trained on molecular descriptors.
+- **Toxicity Risk Score**: A unique 0-100 metric for instant chemical safety assessment.
+- **Explainable AI (XAI)**: Breakdown of molecular features influencing toxicity (LogP, MW, aromatic rings, HBD, HBA, TPSA, etc.).
+- **Smart Dashboard**: Analytics dashboard with detailed compound analysis and molecular property visualization.
+- **SMILES Input**: Input molecules via SMILES notation for instant toxicity analysis.
+- **Molecular Details Modal**: Click a compound in the dashboard to see detailed toxicity breakdown and molecular properties.
+- **ChemiBot Assistant**: Specialized chatbot for toxicology FAQs, SMILES format help, and molecular descriptor explanations.
+- **Detailed Reports**: Generate comprehensive toxicity assessment reports with molecular analysis for sharing/printing.
+- **Optimized Performance**: Core prediction logic separated for faster loading and cleaner code.
+- **Hybrid Persistence**: Optimized for serverless; data survives resets via `LocalStorage` + optional PostgreSQL.
 
 ---
 
@@ -67,12 +68,13 @@ This document details the setup, training, and deployment processes for the **Co
 Before running the server, you must train the internal AI models:
 
 ```bash
-python train_model.py
+python train_toxicity_model.py
 ```
 
-- **Inputs**: `diabetes.csv`
-- **Outputs**: `model/diabetes_model.pkl`, `scaler.pkl`, `feature_names.pkl`
-- **Logic**: Evaluates multiple classifiers and picks the most accurate one.
+- **Inputs**: Toxicity dataset with molecular SMILES strings and toxicity labels (tox21_processed.csv)
+- **Outputs**: `model/toxicity_model.pkl`, `toxicity_scaler.pkl`, `toxicity_feature_names.pkl`
+- **Logic**: Extracts molecular descriptors from SMILES using RDKit, evaluates multiple classifiers, and picks the most accurate one
+- **Molecular Features**: LogP (lipophilicity), MW (molecular weight), HBD (hydrogen bond donors), HBA (hydrogen bond acceptors), TPSA (topological polar surface area), and more
 
 ---
 
@@ -105,22 +107,33 @@ Because Vercel serverless functions have a read-only filesystem (except `/tmp`),
 
 ---
 
-## 6. Chatbot Customization 🤖
+## 6. ChemiBot Customization 🤖
 
-The chatbot uses `static/codecure_kb.json` as its brain. To add more answers:
+ChemiBot uses `static/codecure_kb.json` as its knowledge base. To add more chemical/toxicology answers:
 
 1. Open `static/codecure_kb.json`.
-2. Add a new object with `keywords`, `question`, and `answer`.
+2. Add a new object with `keywords`, `question`, and `answer` related to toxicology, SMILES, molecular descriptors, or chemical properties.
 3. The chatbot will instantly start recognizing the new keywords.
+
+**Example**:
+```json
+{
+  "keywords": ["SMILES", "structure", "notation"],
+  "question": "What is SMILES notation?",
+  "answer": "SMILES (Simplified Molecular Input Line Entry System) is a notation for representing molecules as text strings. For example, ethanol is CCO and benzene is c1ccccc1."
+}
+```
 
 ---
 
 ## 7. Troubleshooting 🔍
 
 - **Blank PDFs**: Ensure you are using a Chromium-based browser (Chrome, Edge) for the best `html2pdf.js` results.
-- **Dashboard Resetting**: If data disappears on refresh, ensure your browser allows `LocalStorage`. For permanent storage across devices, use a Postgres DB.
-- **Model Errors**: If the AI fails to predict, ensure you ran `python train_model.py` and that the `model/` folder contains the `.pkl` files.
+- **Dashboard Resetting**: If compound data disappears on refresh, ensure your browser allows `LocalStorage`. For permanent storage across devices, use a Vercel Postgres DB.
+- **Model Errors**: If toxicity prediction fails, ensure you ran `python train_toxicity_model.py` and that the `model/` folder contains `.pkl` files (`toxicity_model.pkl`, `toxicity_scaler.pkl`, `toxicity_feature_names.pkl`).
+- **Invalid SMILES**: The app validates SMILES notation via RDKit. Make sure your input follows valid SMILES rules. Example valid SMILES: `CCO` (ethanol), `CC(C)Cc1ccc(cc1)C(C)C` (ibuprofen).
+- **Descriptor Calculation**: If molecular descriptors fail to calculate, check that RDKit is properly installed: `pip install -r requirements.txt`
 
 ---
 
-**Happy Deploying!** 🩺
+**Happy Analyzing!** 🧪
