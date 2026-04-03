@@ -311,19 +311,58 @@ def get_risk_level(probability: float) -> str:
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Serve the main application page."""
-    groq_api_key = os.getenv("GROQ_API_KEY", "")
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "groq_api_key": groq_api_key
-    })
+    try:
+        groq_api_key = os.getenv("GROQ_API_KEY", "")
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "groq_api_key": groq_api_key
+        })
+    except Exception as e:
+        # Fallback error page
+        return HTMLResponse(f"""
+        <html>
+        <head><title>CodeCure - Error</title></head>
+        <body>
+        <h1>Application Error</h1>
+        <p>There was an issue loading the application: {str(e)}</p>
+        <p>Please check the <a href="/api/health">health check</a> for more details.</p>
+        </body>
+        </html>
+        """, status_code=500)
 
 
 @app.get("/api/health")
 async def health_check():
     """API health check endpoint."""
+    import os
+
+    # Check environment
+    groq_key_set = bool(os.getenv("GROQ_API_KEY"))
+    vercel_env = bool(os.getenv("VERCEL"))
+
+    # Check database
+    db_status = "unknown"
+    try:
+        # Try to create tables
+        Base.metadata.create_all(bind=engine)
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+
+    # Check static files
+    static_exists = os.path.exists("static")
+    templates_exist = os.path.exists("templates")
+
     return {
-        "status": "healthy",
+        "status": "healthy" if model is not None else "degraded",
         "model_loaded": model is not None,
+        "database_status": db_status,
+        "groq_api_key_set": groq_key_set,
+        "vercel_environment": vercel_env,
+        "static_files_exist": static_exists,
+        "templates_exist": templates_exist,
+        "python_version": f"{os.sys.version_info.major}.{os.sys.version_info.minor}.{os.sys.version_info.micro}",
+        "working_directory": os.getcwd(),
         "version": "1.0.0",
         "timestamp": datetime.utcnow().isoformat()
     }
