@@ -1,9 +1,11 @@
 // ═══════════════ CODECURE CORE JAVASCRIPT ═══════════════
 // Handles: AI Predictions, Dashboard Analytics, Chatbot, and PDF Generation
 
-// Get backend URL from environment (set by backend template)
-// Fallback to localhost for development
-const BACKEND_URL = window.ENV?.BACKEND_URL || 'http://localhost:8000';
+// Get backend URL from configuration helper or template injection
+// Supports: Local backend, Vercel frontend, hybrid deployments
+const BACKEND_URL = typeof window !== 'undefined' && window.BACKEND_URL_CONFIG 
+    ? window.BACKEND_URL_CONFIG 
+    : (window.ENV?.BACKEND_URL || 'http://localhost:8000');
 
 // Initialize Lucide Icons & UI Effects
 document.addEventListener('DOMContentLoaded', () => {

@@ -47,9 +47,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://codecure.vercel.app",  # Production Frontend
+        "https://codecure.vercel.app",   # Production Frontend (Vercel)
+        "https://codecure-*.vercel.app", # Vercel preview deployments
         "http://localhost:3000",         # Local Frontend Dev
-        "http://localhost:8000",         # Local Backend
+        "http://localhost:8000",         # Local Backend Dev
         "*"                              # Allow all for development
     ],
     allow_credentials=True,
