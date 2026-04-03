@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideLoader = () => {
         const loader = document.getElementById('page-loader');
         const statusEl = loader ? loader.querySelector('.loader-status') : null;
-        
+
         if (loader) {
             // Cycle status messages for a more "AI" feel during the 2.5s wait
             if (statusEl) {
@@ -136,7 +136,7 @@ function savePredictionLocally(input, result) {
     try {
         const storageKey = 'codecure_history';
         let history = JSON.parse(localStorage.getItem(storageKey) || '[]');
-        
+
         const record = {
             id: Math.floor(Math.random() * 9000) + 1000,
             name: input.name || 'Anonymous',
@@ -147,7 +147,7 @@ function savePredictionLocally(input, result) {
             risk_level: result.risk_level,
             created_at: new Date().toISOString()
         };
-        
+
         history.unshift(record);
         localStorage.setItem(storageKey, JSON.stringify(history.slice(0, 50)));
     } catch (e) { console.error("Local save failed:", e); }
@@ -258,12 +258,12 @@ async function handlePrediction(event) {
         }
 
         const result = await response.json();
-        
+
         savePredictionLocally(data, result);
         displayResults(result);
         showToast('AI Analysis completed successfully!', 'success');
         updateHomeStats();
-        loadDashboard(); 
+        loadDashboard();
 
     } catch (error) {
         showToast(`Error: ${error.message}`, 'error');
@@ -310,7 +310,7 @@ function displayResults(result) {
     const probPercent = (result.risk_probability * 100).toFixed(1);
     const probValueEl = document.getElementById('probability-value');
     if (probValueEl) probValueEl.textContent = probPercent + '%';
-    
+
     const probFill = document.getElementById('probability-fill');
     if (probFill) {
         let probColor;
@@ -398,7 +398,7 @@ function updateDashboardStats() {
     const total = dashboardDataStore.length;
     const highRisk = dashboardDataStore.filter(p => ['High', 'Critical'].includes(p.risk_level)).length;
     const lowRisk = total - highRisk;
-    
+
     // Use Number() to ensure calculations are valid
     const avgScore = total > 0 ? (dashboardDataStore.reduce((acc, p) => acc + Number(p.health_score || 0), 0) / total).toFixed(1) : '—';
     const avgGlucose = total > 0 ? (dashboardDataStore.reduce((acc, p) => acc + Number(p.glucose || 0), 0) / total).toFixed(1) : '—';
@@ -416,7 +416,7 @@ function updateDashboardStats() {
     if (els.total) animateCounter(els.total, total);
     if (els.high) animateCounter(els.high, highRisk);
     if (els.low) animateCounter(els.low, lowRisk);
-    
+
     if (els.avgScore) els.avgScore.textContent = avgScore;
     if (els.avgGlucose) els.avgGlucose.textContent = avgGlucose;
     if (els.avgBmi) els.avgBmi.textContent = avgBmi;
@@ -431,8 +431,8 @@ async function loadDashboard() {
         const localHistory = getLocalHistory();
         const serverRecordIds = new Set((data.recent_predictions || []).map(p => p.id));
         const uniqueLocal = localHistory.filter(p => !serverRecordIds.has(p.id));
-        
-        dashboardDataStore = [...(data.recent_predictions || []), ...uniqueLocal].sort((a, b) => 
+
+        dashboardDataStore = [...(data.recent_predictions || []), ...uniqueLocal].sort((a, b) =>
             new Date(b.created_at) - new Date(a.created_at)
         );
 
@@ -444,10 +444,10 @@ async function loadDashboard() {
     } catch (error) {
         console.error('Dashboard error:', error);
         const localHistory = getLocalHistory();
-        dashboardDataStore = localHistory.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-        
+        dashboardDataStore = localHistory.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
         updateDashboardStats();
-        
+
         const container = document.getElementById('patients-table-container');
         if (container) renderDashboardTable(container);
     }
@@ -480,7 +480,7 @@ function renderDashboardTable(container) {
 
     dashboardDataStore.forEach(p => {
         const riskClass = (p.risk_level || 'low').toLowerCase();
-        
+
         // Detailed Date & Time format as requested
         const dateObj = new Date(p.created_at);
         const dateStr = dateObj.toLocaleDateString('en-IN', {
@@ -567,19 +567,19 @@ async function updateHomeStats() {
         const response = await fetch(`/api/dashboard?device_id=${encodeURIComponent(getDeviceId())}`);
         let serverTotal = 0;
         let serverPredictions = [];
-        
+
         if (response.ok) {
             const data = await response.json();
             serverTotal = data.total_patients || 0;
             serverPredictions = data.recent_predictions || [];
         }
-        
+
         const localHistory = getLocalHistory();
         const serverRecordIds = new Set(serverPredictions.map(p => p.id));
         const uniqueLocalCount = localHistory.filter(p => !serverRecordIds.has(p.id)).length;
-        
+
         const total = Math.max(serverTotal, serverPredictions.length) + uniqueLocalCount;
-        
+
         const statEl = document.getElementById('stat-total');
         if (statEl) statEl.textContent = total;
     } catch (e) {
@@ -594,14 +594,77 @@ async function updateHomeStats() {
 // ────────────────────────────────────────
 async function downloadDashboardPDF(id) {
     const result = dashboardDataStore.find(p => p.id === id);
-    if (!result) return;
+    if (!result) {
+        showToast('Record not found', 'error');
+        return;
+    }
+
+    // Collect health metrics from stored data
+    const metrics = {
+        'Glucose Level': (result.glucose || '—') + ' mg/dL',
+        'Blood Pressure': (result.blood_pressure || '—') + ' mmHg',
+        'BMI': (result.bmi || '—') + ' kg/m²',
+        'Insulin Level': (result.insulin || '—') + ' mIU/L',
+        'Skin Thickness': (result.skin_thickness || '—') + ' mm',
+        'Diabetes Pedigree': (result.diabetes_pedigree || '—'),
+        'Age': (result.age || '—') + ' years',
+        'Pregnancies': (result.pregnancies || '0'),
+        'Exercise Hours/Week': (result.exercise_hours || '0') + ' hrs',
+        'Sleep Hours/Night': (result.sleep_hours || '7') + ' hrs'
+    };
+
     const data = {
         name: result.name || 'Anonymous',
-        email: 'Patient Record #' + result.id,
+        email: result.email || 'Patient Record #' + result.id,
+        age: result.age || 'N/A',
+        gender: result.gender || 'Not specified',
         score: result.health_score || 0,
-        risk: result.risk_level || 'Low',
-        summary: result.summary || `Prediction analysis for patient #${result.id}.`,
-        probability: (result.risk_probability ? (result.risk_probability * 100).toFixed(1) : '—') + '%'
+        risk: result.risk_level || 'Unknown',
+        summary: result.summary || `AI Diabetes Risk Assessment Report for Patient #${result.id}.`,
+        probability: (result.risk_probability ? (result.risk_probability * 100).toFixed(1) : '—') + '%',
+        metrics: metrics,
+        factors: [
+            {
+                name: 'Glucose Level',
+                value: result.glucose || '—',
+                message: `Blood glucose: ${result.glucose} mg/dL. ${result.glucose > 126 ? '⚠️ Elevated' : 'Normal'}`,
+                status: result.glucose > 140 ? 'danger' : result.glucose > 126 ? 'warning' : 'normal'
+            },
+            {
+                name: 'BMI',
+                value: result.bmi || '—',
+                message: `Body Mass Index: ${result.bmi} kg/m². ${result.bmi > 30 ? 'Indicates obesity' : 'Within acceptable range'}`,
+                status: result.bmi > 30 ? 'danger' : result.bmi > 25 ? 'warning' : 'normal'
+            },
+            {
+                name: 'Blood Pressure',
+                value: result.blood_pressure || '—',
+                message: `Diastolic: ${result.blood_pressure} mmHg. ${result.blood_pressure > 90 ? '⚠️ Elevated' : 'Normal'}`,
+                status: result.blood_pressure > 90 ? 'danger' : result.blood_pressure > 80 ? 'warning' : 'normal'
+            },
+            {
+                name: 'Insulin Level',
+                value: result.insulin || '—',
+                message: `Insulin: ${result.insulin} mIU/L. Reference: 2.6-24.9 mIU/L`,
+                status: result.insulin > 24.9 ? 'warning' : 'normal'
+            },
+            {
+                name: 'Diabetes Pedigree',
+                value: result.diabetes_pedigree || '—',
+                message: 'Family history factor in genetic risk assessment',
+                status: result.diabetes_pedigree > 0.5 ? 'warning' : 'normal'
+            }
+        ],
+        recommendations: [
+            'Maintain regular medical check-ups',
+            'Monitor blood glucose levels regularly',
+            'Engage in at least 150 minutes of moderate exercise per week',
+            'Maintain a balanced, low-glycemic diet',
+            'Aim for 7-9 hours of quality sleep per night',
+            'Reduce stress through meditation or relaxation techniques',
+            'Consult with a diabetes specialist or endocrinologist',
+            'Consider lifestyle modification programs if at high risk'
+        ]
     };
     generatePDFReport(data);
 }
@@ -612,17 +675,36 @@ function downloadPDF() {
         showToast('Please run an AI analysis first.', 'error');
         return;
     }
+
+    // Collect health metrics from form
+    const metrics = {
+        'Glucose Level': (document.getElementById('input-glucose')?.value || '—') + ' mg/dL',
+        'Blood Pressure': (document.getElementById('input-blood-pressure')?.value || '—') + ' mmHg',
+        'BMI': (document.getElementById('input-bmi')?.value || '—') + ' kg/m²',
+        'Insulin Level': (document.getElementById('input-insulin')?.value || '—') + ' mIU/L',
+        'Skin Thickness': (document.getElementById('input-skin-thickness')?.value || '—') + ' mm',
+        'Diabetes Pedigree': (document.getElementById('input-diabetes-pedigree')?.value || '—'),
+        'Age': (document.getElementById('input-age')?.value || '—') + ' years',
+        'Pregnancies': (document.getElementById('input-pregnancies')?.value || '0'),
+        'Exercise Hours/Week': (document.getElementById('input-exercise-hours')?.value || '0') + ' hrs',
+        'Sleep Hours/Night': (document.getElementById('input-sleep-hours')?.value || '7') + ' hrs'
+    };
+
     const data = {
         name: document.getElementById('input-name').value || 'Patient',
         email: document.getElementById('input-email').value || 'Not provided',
+        age: document.getElementById('input-age')?.value || 'N/A',
+        gender: document.getElementById('input-gender')?.value || 'Not specified',
         score: scoreEl.innerText,
         risk: document.getElementById('risk-text').innerText,
         summary: document.getElementById('result-summary').innerText,
         probability: document.getElementById('probability-value').innerText,
+        metrics: metrics,
         factors: Array.from(document.querySelectorAll('.risk-factor-card')).map(card => ({
             name: card.querySelector('.risk-factor-name').innerText,
             value: card.querySelector('.risk-factor-value').innerText,
-            status: card.querySelector('.risk-factor-status').innerText
+            message: card.querySelector('.risk-factor-message')?.innerText || card.querySelector('.risk-factor-name').innerText,
+            status: card.querySelector('.risk-factor-status').innerText.toLowerCase().replace('risk ', '')
         })),
         recommendations: Array.from(document.querySelectorAll('.recommendation-item span:last-child')).map(rec => rec.innerText)
     };
@@ -633,66 +715,167 @@ function generatePDFReport(data) {
     // Validate data
     const score = parseInt(data.score) || 0;
     const scoreColor = getScoreColor(score);
-    
+    const timestamp = new Date();
+
     const pdfContent = document.createElement('div');
-    pdfContent.style.cssText = 'width:800px;background:white;padding:40px;border:1px solid #e2e8f0;color:#111827;box-sizing:border-box;font-family:Arial,sans-serif;';
+    pdfContent.style.cssText = 'width:900px;background:white;padding:50px;color:#1a202c;box-sizing:border-box;font-family:"Segoe UI",Arial,sans-serif;line-height:1.6;';
     pdfContent.id = 'pdf-content-' + Date.now();
-    
+
     pdfContent.innerHTML = `
-        <div style="border-bottom:4px solid #10b981;padding-bottom:15px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;">
-            <h1 style="color:#10b981;font-size:32px;margin:0;font-weight:800;">CodeCure AI</h1>
-            <div style="text-align:right;font-size:12px;color:#64748b;">#CC-${Date.now().toString().slice(-6)}</div>
+        <!-- HEADER -->
+        <div style="border-bottom:3px solid #10b981;padding-bottom:20px;margin-bottom:30px;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td style="vertical-align:top;">
+                        <h1 style="color:#10b981;font-size:36px;margin:0;font-weight:900;">CodeCure AI</h1>
+                        <p style="color:#64748b;margin:5px 0 0 0;font-size:13px;">Diabetes Risk Assessment Platform</p>
+                    </td>
+                    <td style="text-align:right;vertical-align:top;">
+                        <div style="background:#f0fdf4;padding:12px 16px;border-radius:8px;border:1px solid #10b981;">
+                            <p style="margin:0;font-size:11px;color:#64748b;">Report ID</p>
+                            <p style="margin:5px 0 0 0;font-size:14px;font-weight:bold;color:#10b981;font-family:monospace;">#CC${Date.now().toString().slice(-10)}</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div style="background:#f8fafc;padding:20px;border-radius:10px;margin-bottom:25px;">
-            <h3 style="margin:0;font-size:18px;color:#111827;">${data.name || 'Patient'}</h3>
-            <p style="color:#64748b;margin:5px 0;font-size:14px;">${data.email || 'N/A'} | ${new Date().toLocaleDateString()}</p>
+
+        <!-- RISK ASSESSMENT CARD -->
+        <div style="background:linear-gradient(135deg, ${scoreColor}15, ${scoreColor}05);border:2px solid ${scoreColor};border-radius:10px;padding:25px;margin-bottom:30px;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td style="width:100px;vertical-align:top;text-align:center;">
+                        <div style="background:${scoreColor};color:white;width:90px;height:90px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin:0 auto;">
+                            <span style="font-size:36px;font-weight:900;">${score}</span>
+                            <span style="font-size:13px;margin-top:5px;">/100</span>
+                        </div>
+                    </td>
+                    <td style="padding-left:25px;vertical-align:middle;">
+                        <h2 style="margin:0 0 8px 0;font-size:24px;color:#111827;font-weight:700;">${data.risk || 'Unknown'} Risk</h2>
+                        <p style="margin:0 0 12px 0;color:#64748b;font-size:14px;">Diabetes Probability: <span style="color:${scoreColor};font-weight:bold;font-size:16px;">${data.probability || '—'}</span></p>
+                        <p style="margin:0;padding:8px 12px;background:white;border-left:3px solid ${scoreColor};border-radius:4px;font-size:12px;color:#374151;">${data.summary || 'No summary available.'}</p>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div style="display:flex;align-items:center;gap:20px;margin-bottom:30px;">
-            <div style="background:${scoreColor};color:white;width:80px;height:80px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-                <span style="font-size:28px;font-weight:bold;">${score}</span>
-                <span style="font-size:11px;margin-top:3px;">/100</span>
-            </div>
-            <div>
-                <h2 style="margin:0;font-size:20px;color:#111827;">${data.risk || 'Unknown'} Risk</h2>
-                <p style="margin:8px 0 0 0;color:#64748b;font-size:14px;">Diabetes Probability: <strong style="color:#ef4444;">${data.probability || '—'}</strong></p>
-                <p style="margin:5px 0 0 0;color:#64748b;font-size:12px;">Generated: ${new Date().toLocaleTimeString()}</p>
-            </div>
+
+        <!-- PATIENT INFORMATION -->
+        <div style="margin-bottom:30px;">
+            <h3 style="margin:0 0 15px 0;font-size:14px;color:#111827;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;">Patient Information</h3>
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td style="width:50%;padding:10px 0;border-bottom:1px solid #e2e8f0;">
+                        <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;">Name</p>
+                        <p style="margin:5px 0 0 0;font-size:14px;color:#111827;font-weight:500;">${data.name || 'Not Provided'}</p>
+                    </td>
+                    <td style="width:50%;padding:10px 0 10px 20px;border-bottom:1px solid #e2e8f0;">
+                        <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;">Email/ID</p>
+                        <p style="margin:5px 0 0 0;font-size:14px;color:#111827;font-weight:500;">${data.email || 'Not Provided'}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 0;border-bottom:1px solid #e2e8f0;">
+                        <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;">Age</p>
+                        <p style="margin:5px 0 0 0;font-size:14px;color:#111827;font-weight:500;">${data.age || 'Not Provided'}</p>
+                    </td>
+                    <td style="padding:10px 0 10px 20px;border-bottom:1px solid #e2e8f0;">
+                        <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;">Gender</p>
+                        <p style="margin:5px 0 0 0;font-size:14px;color:#111827;font-weight:500;">${data.gender || 'Not Provided'}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 0;">
+                        <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;">Report Date</p>
+                        <p style="margin:5px 0 0 0;font-size:14px;color:#111827;font-weight:500;">${timestamp.toLocaleDateString()}</p>
+                    </td>
+                    <td style="padding:10px 0 0 20px;">
+                        <p style="margin:0;font-size:12px;color:#64748b;font-weight:600;">Report Time</p>
+                        <p style="margin:5px 0 0 0;font-size:14px;color:#111827;font-weight:500;">${timestamp.toLocaleTimeString()}</p>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div style="border-left:5px solid ${scoreColor};padding:15px;background:#f8fafc;margin-bottom:30px;border-radius:0 5px 5px 0;">
-            <strong style="color:#111827;font-size:14px;">Clinical Summary:</strong>
-            <p style="margin:10px 0 0 0;color:#374151;font-size:13px;line-height:1.6;">${data.summary || 'No summary available.'}</p>
-        </div>
-        ${data.factors && data.factors.length > 0 ? `
-        <div style="margin-bottom:25px;">
-            <h3 style="margin:0 0 12px 0;font-size:14px;color:#111827;font-weight:bold;">Risk Factors:</h3>
-            <table style="width:100%;border-collapse:collapse;font-size:12px;">
-                ${data.factors.map(f => `
-                <tr style="border-bottom:1px solid #e2e8f0;">
-                    <td style="padding:8px;color:#111827;">${f.name || 'N/A'}</td>
-                    <td style="padding:8px;text-align:right;color:#64748b;">${f.value || '—'}</td>
-                    <td style="padding:8px;text-align:right;"><span style="background:${f.status === 'danger' ? '#fee2e2' : f.status === 'warning' ? '#fef3c7' : '#d1fae5'};color:${f.status === 'danger' ? '#991b1b' : f.status === 'warning' ? '#92400e' : '#065f46'};padding:2px 6px;border-radius:3px;font-size:11px;">${f.status || 'normal'}</span></td>
+
+        <!-- HEALTH METRICS -->
+        ${data.metrics ? `
+        <div style="margin-bottom:30px;">
+            <h3 style="margin:0 0 15px 0;font-size:14px;color:#111827;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;">Health Metrics</h3>
+            <table style="width:100%;border-collapse:collapse;">
+                <tr style="background:#f8fafc;">
+                    <td style="padding:10px;border:1px solid #e2e8f0;font-weight:600;color:#111827;font-size:12px;">Metric</td>
+                    <td style="padding:10px;border:1px solid #e2e8f0;font-weight:600;color:#111827;font-size:12px;text-align:right;">Value</td>
+                    <td style="padding:10px;border:1px solid #e2e8f0;font-weight:600;color:#111827;font-size:12px;text-align:center;">Range</td>
+                </tr>
+                ${Object.entries(data.metrics).map(([key, val]) => `
+                <tr>
+                    <td style="padding:10px;border:1px solid #e2e8f0;color:#374151;font-size:12px;">${key}</td>
+                    <td style="padding:10px;border:1px solid #e2e8f0;color:#111827;font-weight:500;font-size:12px;text-align:right;">${val}</td>
+                    <td style="padding:10px;border:1px solid #e2e8f0;text-align:center;color:#64748b;font-size:11px;">Normal</td>
                 </tr>
                 `).join('')}
             </table>
         </div>
         ` : ''}
-        <div style="border-top:2px solid #e2e8f0;padding-top:15px;margin-top:25px;">
-            <p style="font-size:10px;color:#94a3b8;margin:0;text-align:center;">© 2026 CodeCure AI - Diabetes Risk Assessment Report<br/>This is a clinical summary only. Please consult with a healthcare provider.</p>
+
+        <!-- RISK FACTORS ANALYSIS -->
+        ${data.factors && data.factors.length > 0 ? `
+        <div style="margin-bottom:30px;">
+            <h3 style="margin:0 0 15px 0;font-size:14px;color:#111827;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;">Risk Factor Analysis</h3>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                ${data.factors.slice(0, 6).map(f => `
+                <div style="border-left:4px solid ${f.status === 'danger' ? '#ef4444' : f.status === 'warning' ? '#f59e0b' : '#10b981'};background:${f.status === 'danger' ? '#fef2f2' : f.status === 'warning' ? '#fffbeb' : '#f0fdf4'};padding:12px 15px;border-radius:6px;">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:6px;">
+                        <h4 style="margin:0;font-size:13px;font-weight:700;color:#111827;">${f.name || 'N/A'}</h4>
+                        <span style="background:${f.status === 'danger' ? '#fee2e2' : f.status === 'warning' ? '#fef3c7' : '#d1fae5'};color:${f.status === 'danger' ? '#991b1b' : f.status === 'warning' ? '#92400e' : '#065f46'};padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;">${f.status}</span>
+                    </div>
+                    <p style="margin:0;font-size:12px;color:#374151;line-height:1.5;">${f.message || 'Assessment completed.'}</p>
+                    ${f.value ? `<p style="margin:8px 0 0 0;font-size:11px;color:#64748b;font-weight:500;">Value: <strong>${f.value}</strong></p>` : ''}
+                </div>
+                `).join('')}
+            </div>
+        </div>
+        ` : ''}
+
+        <!-- RECOMMENDATIONS -->
+        ${data.recommendations && data.recommendations.length > 0 ? `
+        <div style="margin-bottom:30px;">
+            <h3 style="margin:0 0 15px 0;font-size:14px;color:#111827;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;">Clinical Recommendations</h3>
+            <div style="background:#f0f9ff;border-left:4px solid #0284c7;padding:15px;border-radius:6px;">
+                <ul style="margin:0;padding:0 0 0 20px;color:#1e40af;font-size:12px;">
+                    ${data.recommendations.slice(0, 8).map(rec => `
+                    <li style="margin:6px 0;">${rec}</li>
+                    `).join('')}
+                </ul>
+            </div>
+        </div>
+        ` : ''}
+
+        <!-- DISCLAIMER & FOOTER -->
+        <div style="border-top:2px solid #e2e8f0;padding-top:20px;margin-top:30px;">
+            <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 15px;border-radius:6px;margin-bottom:15px;">
+                <p style="margin:0;font-size:11px;color:#92400e;line-height:1.6;"><strong>⚠️ IMPORTANT DISCLAIMER:</strong> This report is an AI-generated assessment for informational purposes only. It is NOT a medical diagnosis. Please consult with a qualified healthcare professional for proper medical evaluation, diagnosis, and treatment recommendations.</p>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:10px;color:#64748b;">
+                <tr>
+                    <td style="padding:5px 0;">© 2026 CodeCure AI Platform</td>
+                    <td style="text-align:right;padding:5px 0;">Confidential - For Medical Professional Use</td>
+                </tr>
+            </table>
         </div>
     `;
-    
+
     document.body.appendChild(pdfContent);
     pdfContent.style.position = 'absolute';
     pdfContent.style.left = '-9999px';
-    
-    showToast('Generating PDF...', 'info');
-    
+
+    showToast('Generating Professional PDF Report...', 'info');
+
     const opt = {
-        margin: 5,
-        filename: `CodeCure_Report_${(data.name || 'Patient').replace(/\s+/g,'_')}_${new Date().getTime()}.pdf`,
-        image: {type: 'jpeg', quality: 0.98},
-        html2canvas: {scale: 2, useCORS: true, backgroundColor: '#ffffff'},
-        jsPDF: {unit: 'mm', format: 'a4', orientation: 'portrait', compress: true}
+        margin: [10, 10, 10, 10],
+        filename: `CodeCure_MedicalReport_${(data.name || 'Patient').replace(/\s+/g, '_')}_${timestamp.getTime()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
     };
 
     // Use html2pdf reliably
@@ -701,7 +884,7 @@ function generatePDFReport(data) {
         .from(pdfContent)
         .save()
         .then(() => {
-            showToast('Report downloaded successfully!', 'success');
+            showToast('Professional report downloaded successfully!', 'success');
             document.body.removeChild(pdfContent);
         })
         .catch((error) => {
@@ -785,9 +968,9 @@ function addMessage(text, type) {
 
 function findBestAnswer(query) {
     const q = query.toLowerCase().trim();
-    if (['hello', 'hi', 'hey'].some(g => q.includes(g)) || q.length < 3) 
+    if (['hello', 'hi', 'hey'].some(g => q.includes(g)) || q.length < 3)
         return "Hello! I am your CodeCure AI assistant. How can I help you today?";
-    
+
     let bestMatch = null, maxScore = 0;
     knowledgeBase.forEach(item => {
         let score = 0;
@@ -796,9 +979,9 @@ function findBestAnswer(query) {
     });
 
     if (bestMatch && maxScore > 1) return bestMatch;
-    
+
     const related = ['codecure', 'health', 'diabetes', 'predict', 'report', 'dashboard', 'ai', 'bmi', 'glucose'];
     if (!related.some(k => q.includes(k))) return "I am specialized in CodeCure-related queries. Please ask about the platform!";
-    
+
     return "I'm not sure about that specific detail. Could you please rephrase?";
 }
