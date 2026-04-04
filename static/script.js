@@ -97,6 +97,11 @@ document.addEventListener('DOMContentLoaded', function () {
     initSlideshows();
     loadKnowledgeBase();
 
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
     // Mobile Menu Toggle logic
     const mobileToggle = document.getElementById('mobile-toggle');
     const navMenu = document.getElementById('navbar-nav');
