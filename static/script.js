@@ -5,7 +5,7 @@
 // Supports: Local backend, Vercel frontend, hybrid deployments
 const BACKEND_URL = typeof window !== 'undefined' && window.BACKEND_URL_CONFIG
     ? window.BACKEND_URL_CONFIG
-    : (window.ENV?.BACKEND_URL || 'http://localhost:8000');
+    : ((window.ENV && window.ENV.BACKEND_URL) ? window.ENV.BACKEND_URL : 'http://localhost:8000');
 
 // ────────────────────────────────────────
 // Accordion Functionality
@@ -157,7 +157,9 @@ function getDeviceId() {
     const storageKey = 'codecure_device_id';
     let id = localStorage.getItem(storageKey);
     if (!id) {
-        id = (crypto?.randomUUID ? crypto.randomUUID() : `dev-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+        id = ((typeof crypto !== 'undefined' && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : `dev-${Date.now()}-${Math.random().toString(16).slice(2)}`);
         localStorage.setItem(storageKey, id);
     }
     return id;
@@ -710,23 +712,23 @@ function downloadPDF() {
 
     // Collect health metrics from form
     const metrics = {
-        'Glucose Level': (document.getElementById('input-glucose')?.value || '—') + ' mg/dL',
-        'Blood Pressure': (document.getElementById('input-bp')?.value || '—') + ' mmHg',
-        'BMI': (document.getElementById('input-bmi')?.value || '—') + ' kg/m²',
-        'Insulin Level': (document.getElementById('input-insulin')?.value || '—') + ' mIU/L',
-        'Skin Thickness': (document.getElementById('input-skin')?.value || '—') + ' mm',
-        'Diabetes Pedigree': (document.getElementById('input-dpf')?.value || '—'),
-        'Age': (document.getElementById('input-age')?.value || '—') + ' years',
-        'Pregnancies': (document.getElementById('input-pregnancies')?.value || '0'),
-        'Exercise Hours/Week': (document.getElementById('input-exercise')?.value || '0') + ' hrs',
-        'Sleep Hours/Night': (document.getElementById('input-sleep')?.value || '7') + ' hrs'
+        'Glucose Level': ((document.getElementById('input-glucose') && document.getElementById('input-glucose').value) || '—') + ' mg/dL',
+        'Blood Pressure': ((document.getElementById('input-bp') && document.getElementById('input-bp').value) || '—') + ' mmHg',
+        'BMI': ((document.getElementById('input-bmi') && document.getElementById('input-bmi').value) || '—') + ' kg/m²',
+        'Insulin Level': ((document.getElementById('input-insulin') && document.getElementById('input-insulin').value) || '—') + ' mIU/L',
+        'Skin Thickness': ((document.getElementById('input-skin') && document.getElementById('input-skin').value) || '—') + ' mm',
+        'Diabetes Pedigree': ((document.getElementById('input-dpf') && document.getElementById('input-dpf').value) || '—'),
+        'Age': ((document.getElementById('input-age') && document.getElementById('input-age').value) || '—') + ' years',
+        'Pregnancies': ((document.getElementById('input-pregnancies') && document.getElementById('input-pregnancies').value) || '0'),
+        'Exercise Hours/Week': ((document.getElementById('input-exercise') && document.getElementById('input-exercise').value) || '0') + ' hrs',
+        'Sleep Hours/Night': ((document.getElementById('input-sleep') && document.getElementById('input-sleep').value) || '7') + ' hrs'
     };
 
     const data = {
         name: document.getElementById('input-name').value || 'Patient',
         email: document.getElementById('input-email').value || 'Not provided',
-        age: document.getElementById('input-age')?.value || 'N/A',
-        gender: document.getElementById('input-gender')?.value || 'Not specified',
+        age: (document.getElementById('input-age') && document.getElementById('input-age').value) || 'N/A',
+        gender: (document.getElementById('input-gender') && document.getElementById('input-gender').value) || 'Not specified',
         score: scoreEl.innerText,
         risk: document.getElementById('risk-text').innerText,
         summary: document.getElementById('result-summary').innerText,
@@ -735,7 +737,7 @@ function downloadPDF() {
         factors: Array.from(document.querySelectorAll('.risk-factor-card')).map(card => ({
             name: card.querySelector('.risk-factor-name').innerText,
             value: card.querySelector('.risk-factor-value').innerText,
-            message: card.querySelector('.risk-factor-message')?.innerText || card.querySelector('.risk-factor-name').innerText,
+            message: (card.querySelector('.risk-factor-message') && card.querySelector('.risk-factor-message').innerText) || card.querySelector('.risk-factor-name').innerText,
             status: card.querySelector('.risk-factor-status').innerText.toLowerCase().replace('risk ', '')
         })),
         recommendations: Array.from(document.querySelectorAll('.recommendation-item span:last-child')).map(rec => rec.innerText)
@@ -942,7 +944,7 @@ function initSlideshows() {
 // ────────────────────────────────────────
 // API key is injected from backend via HTML template environment variable
 // window.ENV.GROQ_API_KEY is set in templates/index.html
-const GROQ_API_KEY = window.ENV?.GROQ_API_KEY || '';  // Safely access from window.ENV
+const GROQ_API_KEY = (window.ENV && window.ENV.GROQ_API_KEY) || '';  // Safely access from window.ENV
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 // Log API key status for debugging
@@ -979,8 +981,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (chatbotContainer && chatbotContainer.classList.contains('active') &&
             !chatbotContainer.contains(event.target) &&
-            !chatFab?.contains(event.target) &&
-            !minimizeBtn?.contains(event.target)) {
+            (!chatFab || !chatFab.contains(event.target)) &&
+            (!minimizeBtn || !minimizeBtn.contains(event.target))) {
             chatbotContainer.classList.remove('active');
         }
     });
