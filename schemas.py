@@ -3,7 +3,7 @@ CodeCure - Pydantic Schemas
 Request/Response models for API endpoints.
 """
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 
@@ -53,6 +53,8 @@ class PredictionResponse(BaseModel):
 
 class PatientRecord(BaseModel):
     """Patient record response."""
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     name: Optional[str]
     age: int
@@ -63,9 +65,6 @@ class PatientRecord(BaseModel):
     health_score: Optional[float]
     risk_level: Optional[str]
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class DashboardStats(BaseModel):

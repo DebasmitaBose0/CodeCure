@@ -92,10 +92,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Initialize specific components
-    // NOTE: updateHomeStats() is intentionally NOT called here to ensure a clean state
-    // on first visit. User stats will update only after they perform a prediction.
     initSlideshows();
     loadKnowledgeBase();
+    updateHomeStats();
 
     // Initialize Lucide icons
     if (typeof lucide !== 'undefined') {
@@ -712,15 +711,15 @@ function downloadPDF() {
     // Collect health metrics from form
     const metrics = {
         'Glucose Level': (document.getElementById('input-glucose')?.value || '—') + ' mg/dL',
-        'Blood Pressure': (document.getElementById('input-blood-pressure')?.value || '—') + ' mmHg',
+        'Blood Pressure': (document.getElementById('input-bp')?.value || '—') + ' mmHg',
         'BMI': (document.getElementById('input-bmi')?.value || '—') + ' kg/m²',
         'Insulin Level': (document.getElementById('input-insulin')?.value || '—') + ' mIU/L',
-        'Skin Thickness': (document.getElementById('input-skin-thickness')?.value || '—') + ' mm',
-        'Diabetes Pedigree': (document.getElementById('input-diabetes-pedigree')?.value || '—'),
+        'Skin Thickness': (document.getElementById('input-skin')?.value || '—') + ' mm',
+        'Diabetes Pedigree': (document.getElementById('input-dpf')?.value || '—'),
         'Age': (document.getElementById('input-age')?.value || '—') + ' years',
         'Pregnancies': (document.getElementById('input-pregnancies')?.value || '0'),
-        'Exercise Hours/Week': (document.getElementById('input-exercise-hours')?.value || '0') + ' hrs',
-        'Sleep Hours/Night': (document.getElementById('input-sleep-hours')?.value || '7') + ' hrs'
+        'Exercise Hours/Week': (document.getElementById('input-exercise')?.value || '0') + ' hrs',
+        'Sleep Hours/Night': (document.getElementById('input-sleep')?.value || '7') + ' hrs'
     };
 
     const data = {
@@ -752,104 +751,118 @@ function generatePDFReport(data) {
 
     showToast('Generating PDF Report...', 'info');
 
-    // Create HTML canvas for rendering
-    const htmlContent = document.createElement('div');
-    htmlContent.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:800px;background:white;padding:40px;font-family:Arial,sans-serif;';
+    // PAGE 1: Patient Info + Health Metrics + Risk Factors
+    const page1Content = document.createElement('div');
+    page1Content.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:800px;background:white;padding:40px;font-family:Arial,sans-serif;';
 
-    htmlContent.innerHTML = `
-        <div style="text-align:center;margin-bottom:30px;border-bottom:3px solid ${scoreColor};padding-bottom:20px;">
-            <h1 style="color:${scoreColor};margin:0;font-size:40px;font-weight:bold;">CodeCure</h1>
-            <p style="color:#666;margin:5px 0 0 0;font-size:14px;">AI Diabetes Risk Assessment Platform</p>
+    page1Content.innerHTML = `
+        <div style="text-align:center;margin-bottom:25px;border-bottom:3px solid ${scoreColor};padding-bottom:15px;">
+            <h1 style="color:${scoreColor};margin:0;font-size:36px;font-weight:bold;">CodeCure</h1>
+            <p style="color:#666;margin:3px 0 0 0;font-size:12px;">AI Diabetes Risk Assessment Report</p>
         </div>
 
-        <div style="background:${scoreColor}15;border:2px solid ${scoreColor};border-radius:8px;padding:20px;margin-bottom:25px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;">
-                <div>
-                    <h2 style="margin:0 0 10px 0;font-size:28px;color:#333;font-weight:bold;">${data.risk} Risk</h2>
-                    <p style="margin:0;font-size:14px;color:#666;">Diabetes Probability: <strong style="color:${scoreColor};font-size:16px;">${data.probability}</strong></p>
+        <div style="background:${scoreColor}15;border:2px solid ${scoreColor};border-radius:8px;padding:15px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <div style="flex:1;">
+                    <h2 style="margin:0 0 8px 0;font-size:24px;color:#333;font-weight:bold;">${data.risk} Risk</h2>
+                    <p style="margin:0;font-size:13px;color:#666;">Probability: <strong style="color:${scoreColor};">${data.probability}</strong></p>
                 </div>
-                <div style="text-align:center;">
-                    <div style="background:${scoreColor};color:white;width:100px;height:100px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;">
-                        <span style="font-size:40px;">${score}</span>
-                        <span style="font-size:14px;margin-top:5px;">/100</span>
-                    </div>
+                <div style="background:${scoreColor};color:white;width:80px;height:80px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">
+                    <span style="font-size:32px;">${score}</span>
+                    <span style="font-size:12px;">/100</span>
                 </div>
             </div>
-            <p style="margin:0;padding:10px;background:white;border-left:3px solid ${scoreColor};border-radius:4px;font-size:12px;color:#333;">${data.summary}</p>
+            <p style="margin:0;padding:8px;background:white;border-left:3px solid ${scoreColor};border-radius:4px;font-size:11px;color:#333;line-height:1.5;">${data.summary}</p>
         </div>
 
-        <h3 style="margin:20px 0 15px 0;font-size:14px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:8px;text-transform:uppercase;">Patient Information</h3>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:25px;font-size:11px;">
+        <h3 style="margin:15px 0 12px 0;font-size:13px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:6px;text-transform:uppercase;">Patient Information</h3>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:10px;">
             <tr style="background:#f8f8f8;">
-                <td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Name</td>
-                <td style="padding:8px;border:1px solid #ddd;">${data.name}</td>
-                <td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Email</td>
-                <td style="padding:8px;border:1px solid #ddd;">${data.email}</td>
+                <td style="padding:6px;border:1px solid #ddd;font-weight:bold;width:25%;">Name</td>
+                <td style="padding:6px;border:1px solid #ddd;width:25%;">${data.name}</td>
+                <td style="padding:6px;border:1px solid #ddd;font-weight:bold;width:25%;">Email</td>
+                <td style="padding:6px;border:1px solid #ddd;width:25%;">${data.email || 'N/A'}</td>
             </tr>
             <tr>
-                <td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Age</td>
-                <td style="padding:8px;border:1px solid #ddd;">${data.age}</td>
-                <td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Gender</td>
-                <td style="padding:8px;border:1px solid #ddd;">${data.gender}</td>
+                <td style="padding:6px;border:1px solid #ddd;font-weight:bold;">Age</td>
+                <td style="padding:6px;border:1px solid #ddd;">${data.age}</td>
+                <td style="padding:6px;border:1px solid #ddd;font-weight:bold;">Gender</td>
+                <td style="padding:6px;border:1px solid #ddd;">${data.gender}</td>
             </tr>
         </table>
 
-        <h3 style="margin:20px 0 15px 0;font-size:14px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:8px;text-transform:uppercase;">Health Metrics</h3>
-        <table style="width:100%;border-collapse:collapse;margin-bottom:25px;font-size:11px;">
+        <h3 style="margin:15px 0 12px 0;font-size:13px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:6px;text-transform:uppercase;">Health Metrics</h3>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:10px;">
             <tr style="background:#f8f8f8;">
-                <td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Metric</td>
-                <td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Value</td>
+                <td style="padding:6px;border:1px solid #ddd;font-weight:bold;width:50%;">Metric</td>
+                <td style="padding:6px;border:1px solid #ddd;font-weight:bold;width:50%;">Value</td>
             </tr>
             ${Object.entries(data.metrics || {}).map(([key, val]) => `
                 <tr>
-                    <td style="padding:8px;border:1px solid #ddd;">${key}</td>
-                    <td style="padding:8px;border:1px solid #ddd;">${val}</td>
+                    <td style="padding:6px;border:1px solid #ddd;">${key}</td>
+                    <td style="padding:6px;border:1px solid #ddd;font-weight:bold;">${val}</td>
                 </tr>
             `).join('')}
         </table>
 
         ${data.factors && data.factors.length > 0 ? `
-            <h3 style="margin:20px 0 15px 0;font-size:14px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:8px;text-transform:uppercase;">Risk Factor Analysis</h3>
-            ${data.factors.slice(0, 6).map(f => {
-        const statusColor = f.status === 'danger' ? '#ff4444' : f.status === 'warning' ? '#ffaa00' : '#00aa00';
-        const bgColor = f.status === 'danger' ? '#ffeeee' : f.status === 'warning' ? '#fffaee' : '#eeffee';
+            <h3 style="margin:15px 0 12px 0;font-size:13px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:6px;text-transform:uppercase;">Risk Factors</h3>
+            ${data.factors.slice(0, 5).map(f => {
+        const statusColor = f.status === 'danger' ? '#ef4444' : f.status === 'warning' ? '#f59e0b' : '#10b981';
+        const bgColor = f.status === 'danger' ? '#fef2f2' : f.status === 'warning' ? '#fffbeb' : '#f0fdf4';
         return `
-                    <div style="border-left:4px solid ${statusColor};background:${bgColor};padding:10px;margin-bottom:8px;border-radius:4px;font-size:11px;">
-                        <div style="font-weight:bold;color:#333;margin-bottom:4px;display:flex;justify-content:space-between;">
+                    <div style="border-left:3px solid ${statusColor};background:${bgColor};padding:8px;margin-bottom:6px;border-radius:3px;font-size:10px;">
+                        <div style="font-weight:bold;color:#333;margin-bottom:2px;display:flex;justify-content:space-between;">
                             <span>${f.name}</span>
-                            <span style="color:${statusColor};text-transform:uppercase;">${f.status}</span>
+                            <span style="color:${statusColor};text-transform:uppercase;font-size:9px;">${f.status}</span>
                         </div>
-                        <p style="margin:0;color:#666;">${f.message}</p>
+                        <p style="margin:0;color:#555;line-height:1.4;">${f.message}</p>
                     </div>
                 `;
     }).join('')}
         ` : ''}
+    `;
 
-        ${data.recommendations && data.recommendations.length > 0 ? `
-            <h3 style="margin:20px 0 15px 0;font-size:14px;color:#333;font-weight:bold;border-bottom:2px solid #ddd;padding-bottom:8px;text-transform:uppercase;">Recommendations</h3>
-            <ul style="margin:0;padding:0 0 0 20px;font-size:11px;color:#333;line-height:1.6;">
-                ${data.recommendations.slice(0, 8).map(rec => `<li style="margin:4px 0;">${rec}</li>`).join('')}
-            </ul>
-        ` : ''}
+    document.body.appendChild(page1Content);
 
-        <div style="border-top:2px solid #ddd;padding-top:15px;margin-top:25px;font-size:10px;">
-            <div style="background:#fff3cd;border-left:4px solid #{f59e0b};padding:10px;border-radius:4px;margin-bottom:12px;">
-                <strong style="color:#856404;">[DISCLAIMER]</strong> <span style="color:#856404;">This is an AI assessment for informational purposes only. NOT a medical diagnosis. Always consult a healthcare professional.</span>
+    // PAGE 2: Recommendations + Disclaimer
+    const page2Content = document.createElement('div');
+    page2Content.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:800px;height:1050px;background:white;padding:40px;font-family:Arial,sans-serif;display:flex;flex-direction:column;box-sizing:border-box;';
+
+    page2Content.innerHTML = `
+        <div style="text-align:center;margin-bottom:25px;border-bottom:3px solid ${scoreColor};padding-bottom:15px;flex-shrink:0;">
+            <h1 style="color:${scoreColor};margin:0;font-size:36px;font-weight:bold;">CodeCure</h1>
+            <p style="color:#666;margin:3px 0 0 0;font-size:12px;">Personalized Health Recommendations</p>
+        </div>
+
+        <h2 style="margin:0 0 15px 0;font-size:16px;color:#333;font-weight:bold;flex-shrink:0;">Health Recommendations</h2>
+
+        <div style="flex:1;overflow:hidden;">
+            ${data.recommendations && data.recommendations.length > 0 ? `
+                <ul style="margin:0 0 20px 0;padding:0 0 0 18px;font-size:11px;color:#333;line-height:1.7;">
+                    ${data.recommendations.slice(0, 15).map(rec => `<li style="margin:6px 0;">${rec}</li>`).join('')}
+                </ul>
+            ` : '<p style="font-size:11px;color:#666;">No specific recommendations available.</p>'}
+        </div>
+
+        <div style="flex-shrink:0;border-top:2px solid #ddd;padding-top:12px;margin-top:auto;font-size:9px;">
+            <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:8px;border-radius:4px;margin-bottom:12px;color:#78350f;line-height:1.6;">
+                <strong>[DISCLAIMER]</strong> This is an AI assessment for informational purposes only and is NOT a medical diagnosis. Always consult with a qualified healthcare professional before making any medical decisions.
             </div>
             <div style="display:flex;justify-content:space-between;color:#999;">
-                <span>&copy; 2026 CodeCure AI Platform</span>
-                <span>Report ID: ${reportID}</span>
-                <span>Generated: ${timestamp}</span>
+                <span>&copy; 2026 CodeCure AI</span>
+                <span>${reportID}</span>
+                <span>${timestamp}</span>
             </div>
         </div>
     `;
 
-    document.body.appendChild(htmlContent);
+    document.body.appendChild(page2Content);
 
-    // Use html2canvas and jsPDF for better rendering
+    // Render and save PDF with proper page management
     setTimeout(async () => {
         try {
-            const canvas = await html2canvas(htmlContent, {
+            const canvas1 = await html2canvas(page1Content, {
                 scale: 2,
                 backgroundColor: '#ffffff',
                 logging: false,
@@ -857,28 +870,36 @@ function generatePDFReport(data) {
                 allowTaint: true
             });
 
-            const imgData = canvas.toDataURL('image/png');
+            const canvas2 = await html2canvas(page2Content, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            });
+
+            const imgData1 = canvas1.toDataURL('image/jpeg', 0.95);
+            const imgData2 = canvas2.toDataURL('image/jpeg', 0.95);
+
             const pdf = new (window.jsPDF || window.jspdf.jsPDF)({
                 orientation: 'portrait',
                 unit: 'mm',
-                format: 'a4'
+                format: 'a4',
+                compress: true
             });
 
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 295; // A4 height in mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const margin = 0;
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+            // Add Page 1
+            const imgHeight1 = (canvas1.height * pageWidth) / canvas1.width;
+            pdf.addImage(imgData1, 'JPEG', margin, margin, pageWidth, Math.min(imgHeight1, pageHeight));
 
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
+            // Add Page 2
+            pdf.addPage();
+            const imgHeight2 = (canvas2.height * pageWidth) / canvas2.width;
+            pdf.addImage(imgData2, 'JPEG', margin, margin, pageWidth, Math.min(imgHeight2, pageHeight));
 
             pdf.save(`CodeCure_Report_${data.name || 'Patient'}_${Date.now()}.pdf`);
             showToast('Report downloaded successfully!', 'success');
@@ -886,8 +907,11 @@ function generatePDFReport(data) {
             console.error('PDF Generation Error:', error);
             showToast('PDF generation failed. Please try again.', 'error');
         } finally {
-            if (document.body.contains(htmlContent)) {
-                document.body.removeChild(htmlContent);
+            if (document.body.contains(page1Content)) {
+                document.body.removeChild(page1Content);
+            }
+            if (document.body.contains(page2Content)) {
+                document.body.removeChild(page2Content);
             }
         }
     }, 300);
@@ -921,6 +945,16 @@ function initSlideshows() {
 const GROQ_API_KEY = window.ENV?.GROQ_API_KEY || '';  // Safely access from window.ENV
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
+// Log API key status for debugging
+if (typeof window !== 'undefined') {
+    console.log('[CodeCure] Chatbot initialized. GROQ API Key available:', !!GROQ_API_KEY);
+    if (GROQ_API_KEY) {
+        console.log('[CodeCure] Using GROQ API for intelligent responses');
+    } else {
+        console.log('[CodeCure] GROQ_API_KEY not set. Using local knowledge base only.');
+    }
+}
+
 async function loadKnowledgeBase() {
     try {
         const response = await fetch('/static/codecure_kb.json');
@@ -935,6 +969,22 @@ function toggleChat() {
         if (container.classList.contains('active')) document.getElementById('chat-input').focus();
     }
 }
+
+// Close chatbot when clicking outside
+document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (event) {
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatFab = document.querySelector('.chat-fab');
+        const minimizeBtn = document.querySelector('.chatbot-minimize');
+
+        if (chatbotContainer && chatbotContainer.classList.contains('active') &&
+            !chatbotContainer.contains(event.target) &&
+            !chatFab?.contains(event.target) &&
+            !minimizeBtn?.contains(event.target)) {
+            chatbotContainer.classList.remove('active');
+        }
+    });
+});
 
 function handleChatKey(event) { if (event.key === 'Enter') sendChatMessage(); }
 
@@ -968,59 +1018,44 @@ async function sendChatMessage() {
 async function getAIResponse(query) {
     const q = query.toLowerCase().trim();
 
-    // Greeting responses
+    // Greeting responses - short, non-specific
     if (['hello', 'hi', 'hey'].some(g => q.includes(g)) || q.length < 3)
         return "Hello! I'm your CodeCure AI assistant. I can help you with questions about CodeCure, diabetes prediction, our creators (Babin Bid and Debasmita Bose), and our platform. What would you like to know?";
 
-    // Check if question is CodeCure-related
-    const codecureKeywords = ['codecure', 'health', 'diabetes', 'predict', 'report', 'dashboard', 'ai', 'bmi', 'glucose', 'risk', 'babin', 'debasmita', 'bose', 'bid', 'creator', 'founder', 'developer', 'team', 'platform', 'medical', 'prediction', 'assessment'];
-    const isCodeCureRelated = codecureKeywords.some(k => q.includes(k));
+    // Try GROQ API for ALL questions via backend
+    try {
+        console.log('[CodeCure] Attempting to reach backend chatbot endpoint...');
+        const response = await fetch(`${BACKEND_URL}/api/chat`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: query
+            })
+        });
 
-    if (!isCodeCureRelated) {
-        return "I'm specialized only in CodeCure-related queries. I can answer questions about diabetes prediction, health metrics, our AI platform, or our creators Babin Bid and Debasmita Bose. What would you like to know?";
-    }
+        console.log(`[CodeCure] Backend response status: ${response.status}`);
 
-    // Try GROQ API for CodeCure-related questions
-    if (GROQ_API_KEY) {
-        try {
-            const systemPrompt = `You are CodeCure's AI Health Assistant. CodeCure is an AI-powered Diabetes Risk Prediction Platform created by Babin Bid and Debasmita Bose. 
-            
-Key Information:
-- CodeCure predicts diabetes risk using 8 clinical metrics: Glucose Level, Blood Pressure, BMI, Insulin Level, Skin Thickness, Diabetes Pedigree Function, Age, and Pregnancy History
-- The platform provides an AI Health Score (0-100) and diabetes probability
-- Creators: Babin Bid and Debasmita Bose
-- Deployed on Vercel at https://codecure.vercel.app
-- Features: AI predictions, professional PDF reports, health analytics dashboard, AI chatbot assistant
-
-Please answer user questions about CodeCure, diabetes prediction, health metrics, and the platform's features. Keep responses concise (2-3 sentences for brief questions, 3-4 for detailed ones). Always mention the creators when asked about them.`;
-
-            const response = await fetch(GROQ_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${GROQ_API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model: 'mixtral-8x7b-32768',
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: query }
-                    ],
-                    max_tokens: 256,
-                    temperature: 0.7
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.choices && data.choices[0] && data.choices[0].message) {
-                    return data.choices[0].message.content.trim();
-                }
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.response) {
+                console.log('[CodeCure] ✅ Using GROQ API response (via backend)');
+                return data.response.trim();
+            } else {
+                console.warn('[CodeCure] ⚠️ Backend returned error:', data.error || data.details);
             }
-        } catch (error) {
-            console.warn('GROQ API error, falling back to knowledge base:', error);
+        } else {
+            const errorData = await response.json().catch(() => ({ error: response.statusText }));
+            console.warn(`[CodeCure] ⚠️ Backend error ${response.status}:`, errorData);
         }
+    } catch (error) {
+        console.warn('[CodeCure] ⚠️ Backend fetch failed:', error.message);
     }
+
+    console.log('[CodeCure] Falling back to local knowledge base');
 
     // Fallback to local knowledge base
     let bestMatch = null, maxScore = 0;
@@ -1034,12 +1069,41 @@ Please answer user questions about CodeCure, diabetes prediction, health metrics
     return "I'm not sure about that specific detail. Could you please rephrase your question? I'm here to help with CodeCure platform questions!";
 }
 
+function renderMarkdown(text) {
+    // Escape HTML special characters first
+    let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    // Convert [link text](url) to <a> tags
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #10b981; text-decoration: underline; cursor: pointer;">$1</a>');
+
+    // Convert **bold text** to <strong> tags
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong style="font-weight: 600; color: #065f46;">$1</strong>');
+
+    // Convert *italic text* to <em> tags
+    html = html.replace(/\*([^*]+)\*/g, '<em style="font-style: italic; color: #047857;">$1</em>');
+
+    // Convert line breaks to <br> tags
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
+}
+
 function addMessage(text, type) {
     const messages = document.getElementById('chat-messages');
     if (!messages) return;
     const div = document.createElement('div');
     div.className = `message ${type}-message`;
-    div.innerText = text;
+
+    // Render markdown for AI/bot responses, plain text for user messages
+    if (type === 'bot' || type === 'ai') {
+        div.innerHTML = renderMarkdown(text);
+    } else {
+        div.innerText = text;
+    }
+
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
 }

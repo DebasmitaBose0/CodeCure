@@ -1,6 +1,6 @@
 ﻿# 🏥 CodeCure Local Development Guide
 
-Quick setup guide for running CodeCure locally. **For deployment, see [DEPLOYMENT.md](DEPLOYMENT.md).**
+Quick setup guide for running CodeCure locally. **For deployment, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).**
 
 ---
 
@@ -113,7 +113,7 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000
 
 For production deployment on Vercel, Render, or both:
 
-👉 **See [DEPLOYMENT.md](DEPLOYMENT.md)** for 3 complete deployment options
+👉 **See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** for complete deployment instructions
 
 ---
 
@@ -143,7 +143,7 @@ For production deployment on Vercel, Render, or both:
 ## 📚 More Documentation
 
 - [README.md](README.md) - Project overview
-- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide (3 options)
+- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Deployment guide
 - [GitHub Repository](https://github.com/KGFCH2/CodeCure) - Full source code
 
 ---

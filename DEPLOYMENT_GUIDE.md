@@ -2,7 +2,7 @@
 
 **Architecture:**
 
-```
+```text
 Frontend (Vercel) ↔ API (Render) ↔ GROQ API
 ```
 
@@ -20,7 +20,7 @@ Frontend (Vercel) ↔ API (Render) ↔ GROQ API
 
 Your `main.py` already works! Just verify `requirements.txt`:
 
-```
+```text
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 sqlalchemy==2.0.23
@@ -29,12 +29,6 @@ scikit-learn>=1.3.0,<2.0
 numpy
 pandas
 Jinja2
-```
-
-Create `Procfile` (Render uses this):
-
-```
-web: uvicorn main:app --host 0.0.0.0 --port $PORT
 ```
 
 ### **Step 2: Push Code to GitHub**
@@ -70,7 +64,7 @@ git push origin main
 2. Click **Environment** tab
 3. Add variable:
 
-   ```
+   ```text
    GROQ_API_KEY = gsk_your_actual_api_key_here
    ```
 
@@ -80,7 +74,7 @@ git push origin main
 
 After deployment (2-5 minutes), you'll see:
 
-```
+```text
 Backend URL: https://codecure-backend-8yt5.onrender.com
 ```
 
@@ -90,83 +84,13 @@ Backend URL: https://codecure-backend-8yt5.onrender.com
 
 ## **Part 2: Deploy Frontend to Vercel**
 
-### **Step 1: Update API Endpoint in Frontend**
-
-Edit `static/script.js` (find the prediction function):
-
-```javascript
-// ╔════════════════════════════════════════╗
-// ║ ADD THIS AT THE TOP OF script.js       ║
-// ╚════════════════════════════════════════╝
-
-// Get backend URL from environment or use default
-const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://codecure-backend-8yt5.onrender.com';
-
-// Update handlePrediction function - change fetch endpoint:
-async function handlePrediction(event) {
-    event.preventDefault();
-    // ... existing validation code ...
-
-    // CHANGE THIS LINE:
-    // FROM: const response = await fetch('/api/predict', {
-    // TO:
-    const response = await fetch(`${BACKEND_URL}/api/predict`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(predictionData)
-    });
-    
-    // Rest of function stays the same...
-}
-```
-
-### **Step 2: Update HTML to Pass Backend URL**
-
-In `templates/index.html`, update the environment variable injection:
-
-```html
-<!-- Find this section (around line 876) -->
-<script>
-    window.ENV = {
-        GROQ_API_KEY: "{{ groq_api_key }}",
-        BACKEND_URL: "{{ backend_url }}"  // ← ADD THIS LINE
-    };
-</script>
-<script src="/static/script.js"></script>
-```
-
-### **Step 3: Update Backend to Pass Backend URL to Frontend**
-
-In `main.py`, modify the home route:
-
-```python
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request, db: Session = Depends(get_db)):
-    groq_api_key = os.getenv("GROQ_API_KEY", "")
-    backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")  # ← ADD THIS
-    
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "groq_api_key": groq_api_key,
-        "backend_url": backend_url  # ← ADD THIS
-    })
-```
-
-### **Step 4: Commit Changes**
-
-```powershell
-git add templates/index.html static/script.js main.py
-git commit -m "Configure frontend for external backend API"
-git push origin main
-```
-
-### **Step 5: Create Vercel Account**
+### **Step 1: Create Vercel Account**
 
 1. Go to **<https://vercel.com>**
 2. Sign up with GitHub
 3. **Import Project** → Select `CodeCure`
 
-### **Step 6: Configure Vercel Deployment**
+### **Step 2: Configure Vercel Deployment**
 
 1. **Project Settings:**
    - Framework Preset: **Other**
@@ -176,76 +100,74 @@ git push origin main
 
 2. **Environment Variables:**
 
-   ```
+   ```text
    BACKEND_URL = https://codecure-backend-8yt5.onrender.com
    GROQ_API_KEY = gsk_your_api_key  (optional, already on Render)
    ```
 
 3. Click **Deploy**
 
-### **Step 7: Get Frontend URL**
+### **Step 3: Get Frontend URL**
 
 After deployment, Vercel shows:
 
-```
-Frontend URL: https://your-project.vercel.app
+```text
+Frontend URL: https://code-cure.vercel.app
 ```
 
 ---
 
-## **Part 3: Test the Integration**
+## **Part 2: Test the Integration**
 
 ### **Test Backend**
 
-```
-GET https://codecure-backend-8yt5.onrender.com/
+```text
+GET https://your-backend-service.onrender.com/
 Expected: CodeCure homepage
 ```
 
 ### **Test Frontend**
 
-```
-GET https://your-project.vercel.app/
+```text
+GET https://code-cure.vercel.app
 Expected: CodeCure homepage with working chatbot + predictions
 ```
 
 ### **Test API Connection**
 
-1. Open Frontend: `https://your-project.vercel.app`
-2. Fill prediction form
+1. Open Frontend: `https://code-cure.vercel.app`
+2. Fill prediction form with health metrics
 3. Click "Run AI Analysis"
 4. Check Results section shows predictions
 5. Open DevTools (F12) → Network tab
-6. Verify requests go to `codecure-backend-8yt5.onrender.com/api/predict`
+6. Verify requests go to your Render backend URL
 
 ---
 
-## **Part 4: Environment Variables Reference**
+## **Part 3: Environment Variables Reference**
 
 ### **Render (Backend)**
 
-| Variable | Value | Required |
-|----------|-------|----------|
-| `GROQ_API_KEY` | `gsk_xxx` | ✅ YES |
-| `DATABASE_URL` | (not set - uses SQLite) | ❌ NO |
+- `GROQ_API_KEY`: `gsk_xxx` from [Groq Console](https://console.groq.com/keys). Required: yes.
+- `DATABASE_URL`: Not set; uses SQLite. Required: no.
 
 ### **Vercel (Frontend)**
 
-| Variable | Value | Required |
-|----------|-------|----------|
-| `BACKEND_URL` | `https://codecure-backend-8yt5.onrender.com` | ✅ YES |
-| `GROQ_API_KEY` | (optional - already on Render) | ❌ NO |
+- `BACKEND_URL`: Your Render backend URL. Required: yes.
+- `GROQ_API_KEY`: Optional; already set on Render. Required: no.
+
+**Example:** `BACKEND_URL` should be your Render service URL, e.g., `https://codecure-api-xyz.onrender.com`
 
 ### **Local Development (.env)**
 
 ```env
-GROQ_API_KEY=gsk_your_key
+GROQ_API_KEY=gsk_your_key_from_groq_console
 BACKEND_URL=http://localhost:8000
 ```
 
----
+**Note:** The frontend automatically picks up `BACKEND_URL` from environment variables. No code changes needed!
 
-## **Part 5: Custom Domain (Optional)**
+## **Part 4: Custom Domain (Optional)**
 
 ### **Add Domain to Render**
 
@@ -261,29 +183,17 @@ BACKEND_URL=http://localhost:8000
 
 ---
 
-## **Part 6: Troubleshooting**
+## **Part 5: Troubleshooting**
 
 ### **Frontend can't reach backend**
 
 **Problem:** CORS errors in console
 
-```
+```text
 Access to XMLHttpRequest blocked by CORS policy
 ```
 
-**Solution:** Add to `main.py`:
-
-```python
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://your-project.vercel.app", "http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-```
+**Solution:** Check that `BACKEND_URL` is set correctly in Vercel environment variables. The backend automatically allows requests from Vercel's domain.
 
 ### **Backend returns 401 (API Key Error)**
 
@@ -303,83 +213,79 @@ app.add_middleware(
 
 ---
 
+## **Part 6: Deployment Checklist**
+
+- [ ] Code committed and pushed to GitHub
+- [ ] Render backend deployed with GROQ_API_KEY set
+- [ ] Backend URL obtained (copy from Render dashboard)
+- [ ] Vercel frontend deployed with BACKEND_URL set
+- [ ] Frontend URL obtained: `https://code-cure.vercel.app`
+- [ ] Tested: Form submission works
+- [ ] Tested: Predictions return correctly
+- [ ] Tested: Chatbot responds
+- [ ] Verified: Chatbot markdown formatting displays correctly
+
+---
+
 ## **Part 7: Monitoring & Updates**
 
 ### **View Backend Logs**
 
-```
-Render Dashboard → codecure-backend → Logs
+```text
+Render Dashboard → CodeCure Backend → Logs
 ```
 
 ### **View Frontend Logs**
 
-```
-Vercel Dashboard → CodeCure → Deployments → Logs
+```text
+Vercel Dashboard → code-cure → Deployments → Logs
 ```
 
-### **Update Backend**
+### **Auto-Deploy on GitHub Push**
+
+Both Render and Vercel watch your GitHub repository for changes:
 
 ```powershell
+# Update backend
 git push origin main
-# Render auto-deploys in 1-2 minutes
-```
+# → Render auto-deploys in 1-2 minutes
 
-### **Update Frontend**
-
-```powershell
+# Update frontend
 git push origin main
-# Vercel auto-deploys in 1-2 minutes
+# → Vercel auto-deploys in 1-2 minutes
 ```
 
 ---
 
 ## **Part 8: Performance Tips**
 
-1. **Render:** Upgrade to paid tier if you exceed 750 hours/month
+1. **Render:** Upgrade to paid tier to avoid auto-sleep if needed
 2. **Vercel:** Free tier is unlimited - no upgrades needed
 3. **GROQ API:** Monitor your API usage at <https://console.groq.com/>
 
 ---
 
-## **Summary Checklist**
-
-- [ ] Render backend deployed
-- [ ] Backend URL obtained: `https://codecure-backend-8yt5.onrender.com`
-- [ ] GROQ_API_KEY set on Render
-- [ ] Frontend code updated with backend URL
-- [ ] Vercel frontend deployed
-- [ ] Frontend URL obtained: `https://your-project.vercel.app`
-- [ ] BACKEND_URL set on Vercel
-- [ ] Tested: Form submission works
-- [ ] Tested: Predictions return correctly
-- [ ] Tested: Chatbot responds
-
----
-
-## **Quick Commands Reference**
+## **Quick Reference: Common Commands**
 
 ```powershell
 # Deploy backend changes
-git add main.py requirements.txt .
+git add .
 git commit -m "Backend updates"
 git push origin main
 # → Render auto-deploys
 
-# Deploy frontend changes
-git add templates/ static/
-git commit -m "Frontend updates"
-git push origin main
-# → Vercel auto-deploys
-
-# View local status
+# Test backend locally
 python main.py
 # → http://localhost:8000
 
-# Test backend API
-curl https://codecure-backend-8yt5.onrender.com/api/health
-# → Should return: {"status": "healthy"}
+# Test backend API health
+curl https://your-backend.onrender.com/api/health
+# → Should return: {"status": "healthy", "model_loaded": true}
+
+# Check frontend URL
+# → https://code-cure.vercel.app
 ```
 
 ---
 
-**You're all set for production deployment! 🚀**
+**✅ You're all set for production deployment! 🚀**  

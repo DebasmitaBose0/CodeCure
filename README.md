@@ -61,7 +61,7 @@ Deploy on Vercel. Optionally add Vercel Postgres or any PostgreSQL provider for 
 - ✅ Automatic scaling
 - 💰 Database is optional (free without)
 
-**👉 Quick Start**: Copy `.env.example` to `.env`, add your `GROQ_API_KEY`, and run locally or deploy to Vercel!
+**👉 Quick Start**: Copy `.env.example` to `.env`, add your `GROQ_API_KEY`, and run locally or deploy to Vercel! See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for production deployment.
 
 ---
 
