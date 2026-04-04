@@ -2438,6 +2438,37 @@ i[data-lucide="x"] {
     font-size: 1rem;
 }
 
+.chatbot-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    margin-right: 8px;
+}
+
+.chatbot-action-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.14);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.chatbot-action-btn:hover {
+    background: rgba(255, 255, 255, 0.24);
+    transform: translateY(-1px);
+}
+
+.chatbot-action-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
 .chatbot-minimize {
     background: none;
     border: none;
@@ -2500,6 +2531,11 @@ i[data-lucide="x"] {
     padding: 10px 12px;
     font-size: 0.9rem;
     outline: none;
+    min-height: 42px;
+    max-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
 }
 
 #chat-input:focus {
