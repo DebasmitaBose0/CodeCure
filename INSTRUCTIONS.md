@@ -1,6 +1,6 @@
 ﻿# 🏥 CodeCure Local Development Guide
 
-Quick setup guide for running CodeCure locally. **For deployment, see [DEPLOYMENT.md](DEPLOYMENT.md).**
+Quick setup guide for running CodeCure locally. **For deployment, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).**
 
 ---
 
@@ -113,7 +113,7 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000
 
 For production deployment on Vercel, Render, or both:
 
-👉 **See [DEPLOYMENT.md](DEPLOYMENT.md)** for 3 complete deployment options
+👉 **See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** for complete deployment instructions
 
 ---
 
@@ -140,10 +140,27 @@ For production deployment on Vercel, Render, or both:
 
 ---
 
+## 🧭 File Working Principles
+
+- `main.py`: Starts the FastAPI app, serves the UI, and handles prediction, dashboard, health, and chatbot endpoints.
+- `database.py`: Defines the SQLAlchemy models and database connection used to store patient and prediction data.
+- `schemas.py`: Defines the Pydantic request and response models used to validate API data.
+- `train_model.py`: Trains or refreshes the diabetes model artifacts stored in the `model/` folder.
+- `static/script.js`: Runs the frontend logic for predictions, dashboard updates, chatbot messages, and PDF reports.
+- `static/style.css`: Controls the visual design, layout, responsiveness, and UI interactions.
+- `static/config.js`: Chooses the correct backend URL for local and deployed environments.
+- `templates/index.html`: Renders the main page shell and injects runtime environment values for the frontend.
+- `static/codecure_kb.json`: Provides fallback chatbot knowledge when the backend AI response is unavailable.
+- `model/`: Stores the trained ML files needed for prediction at runtime.
+- `requirements.txt`: Lists the Python packages required to run and deploy the app.
+- `render.yaml` and `vercel.json`: Define deployment settings for Render and Vercel.
+- `DEPLOYMENT_GUIDE.md`: Explains how to deploy the backend and frontend step by step.
+- `README.md`: Gives the project overview and high-level feature summary.
+
 ## 📚 More Documentation
 
 - [README.md](README.md) - Project overview
-- [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide (3 options)
+- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) - Deployment guide
 - [GitHub Repository](https://github.com/KGFCH2/CodeCure) - Full source code
 
 ---
