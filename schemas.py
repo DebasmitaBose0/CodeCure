@@ -56,19 +56,19 @@ class PatientRecord(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     id: int
-    name: Optional[str]
+    name: Optional[str] = None
     email: Optional[str] = None
     age: int
     gender: Optional[str] = None
     
-    # Health metrics
+    # Health metrics - all optional with sensible defaults for compatibility
     pregnancies: int = 0
-    glucose: float
-    blood_pressure: float
-    skin_thickness: float
-    insulin: float
-    bmi: float
-    diabetes_pedigree: float
+    glucose: float = 0
+    blood_pressure: Optional[float] = None
+    skin_thickness: Optional[float] = None
+    insulin: Optional[float] = None
+    bmi: float = 0
+    diabetes_pedigree: Optional[float] = None
     
     # Lifestyle
     exercise_hours: Optional[float] = 0
@@ -76,10 +76,10 @@ class PatientRecord(BaseModel):
     smoking: Optional[bool] = False
     
     # Prediction results
-    diabetes_risk: Optional[int]
-    risk_probability: Optional[float]
-    health_score: Optional[float]
-    risk_level: Optional[str]
+    diabetes_risk: Optional[int] = None
+    risk_probability: Optional[float] = None
+    health_score: Optional[float] = None
+    risk_level: Optional[str] = None
     summary: Optional[str] = Field(None, alias="explanation")
     created_at: datetime
 

@@ -682,19 +682,34 @@ async function downloadDashboardPDF(id) {
         return;
     }
 
-    // Collect ALL health metrics to match the Prediction PDF logic exactly
-    const metrics = {
-        'Glucose Level': (result.glucose || '—') + ' mg/dL',
-        'Blood Pressure': (result.blood_pressure || '—') + ' mmHg',
-        'BMI': (result.bmi || '—') + ' kg/m²',
-        'Insulin Level': (result.insulin || '—') + ' mIU/L',
-        'Skin Thickness': (result.skin_thickness || '—') + ' mm',
-        'Diabetes Pedigree': (result.diabetes_pedigree || '—'),
-        'Age': (result.age || '—') + ' years',
-        'Pregnancies': (result.pregnancies || '0'),
-        'Exercise Hours/Week': (result.exercise_hours || '0') + ' hrs',
-        'Sleep Hours/Night': (result.sleep_hours || '7') + ' hrs'
+    // Helper to safely get numeric value or fallback
+    const getMetric = (val, unit = '') => {
+        if (val === null || val === undefined || val === 0) return '—' + (unit ? ' ' + unit : '');
+        return val + (unit ? ' ' + unit : '');
     };
+
+    // Collect ALL health metrics with safe fallbacks
+    const metrics = {
+        'Glucose Level': getMetric(result.glucose, 'mg/dL'),
+        'Blood Pressure': getMetric(result.blood_pressure, 'mmHg'),
+        'BMI': getMetric(result.bmi, 'kg/m²'),
+        'Insulin Level': getMetric(result.insulin, 'mIU/L'),
+        'Skin Thickness': getMetric(result.skin_thickness, 'mm'),
+        'Diabetes Pedigree': getMetric(result.diabetes_pedigree),
+        'Age': getMetric(result.age, 'years'),
+        'Pregnancies': getMetric(result.pregnancies || 0),
+        'Exercise Hours/Week': getMetric(result.exercise_hours || 0, 'hrs'),
+        'Sleep Hours/Night': getMetric(result.sleep_hours || 7, 'hrs')
+    };
+
+    // Calculate probability if missing
+    let probability = result.risk_probability ? (result.risk_probability * 100).toFixed(1) : null;
+    if (!probability && result.risk_level) {
+        // Infer probability from risk level if missing
+        const riskMap = { 'Low': 15, 'Medium': 50, 'High': 75, 'Critical': 90 };
+        probability = riskMap[result.risk_level] || '—';
+    }
+    probability = (probability ? probability : '—') + '%';
 
     // Construct the data object exactly like downloadPDF() does
     const data = {
@@ -705,50 +720,43 @@ async function downloadDashboardPDF(id) {
         score: Math.round(result.health_score || 0),
         risk: result.risk_level || 'Unknown',
         summary: result.summary || result.explanation || `AI Diabetes Risk Assessment Report for Patient #${result.id}.`,
-        probability: (result.risk_probability ? (result.risk_probability * 100).toFixed(1) : '—') + '%',
+        probability: probability,
         metrics: metrics,
         // Reconstruct factors for the PDF table
         factors: [
             {
                 name: 'Glucose Level',
-                value: (result.glucose || '—') + ' mg/dL',
-                message: `Blood glucose: ${result.glucose || '—'} mg/dL. ${result.glucose > 126 ? '[ELEVATED]' : 'Normal'}`,
+                value: getMetric(result.glucose, 'mg/dL'),
+                message: `Blood glucose: ${getMetric(result.glucose)} mg/dL. ${result.glucose > 126 ? '[ELEVATED]' : 'Normal'}`,
                 status: result.glucose > 140 ? 'danger' : result.glucose > 126 ? 'warning' : 'normal'
             },
             {
                 name: 'BMI',
-                value: (result.bmi || '—') + ' kg/m²',
-                message: `Body Mass Index: ${result.bmi || '—'} kg/m². ${result.bmi > 30 ? 'Indicates obesity' : 'Within acceptable range'}`,
+                value: getMetric(result.bmi, 'kg/m²'),
+                message: `Body Mass Index: ${getMetric(result.bmi)} kg/m². ${result.bmi > 30 ? 'Indicates obesity' : 'Within acceptable range'}`,
                 status: result.bmi > 30 ? 'danger' : result.bmi > 25 ? 'warning' : 'normal'
             },
             {
                 name: 'Blood Pressure',
-                value: (result.blood_pressure || '—') + ' mmHg',
-                message: `Diastolic: ${result.blood_pressure || '—'} mmHg. ${result.blood_pressure > 90 ? '[ELEVATED]' : 'Normal'}`,
+                value: getMetric(result.blood_pressure, 'mmHg'),
+                message: `Diastolic: ${getMetric(result.blood_pressure)} mmHg. ${result.blood_pressure > 90 ? '[ELEVATED]' : 'Normal'}`,
                 status: result.blood_pressure > 90 ? 'danger' : result.blood_pressure > 80 ? 'warning' : 'normal'
             },
             {
                 name: 'Insulin Level',
-                value: (result.insulin || '—') + ' mIU/L',
-                message: `Insulin: ${result.insulin || '—'} mIU/L. Reference: 2.6-24.9 mIU/L`,
+                value: getMetric(result.insulin, 'mIU/L'),
+                message: `Insulin: ${getMetric(result.insulin)} mIU/L. Reference: 2.6-24.9 mIU/L`,
                 status: result.insulin > 24.9 ? 'warning' : 'normal'
             },
             {
                 name: 'Diabetes Pedigree',
-                value: result.diabetes_pedigree || '—',
-                message: 'Genetic risk factor score: ' + (result.diabetes_pedigree || '—'),
-                status: result.diabetes_pedigree > 0.5 ? 'warning' : 'normal'
-            }
-        ],
-        // Standard recommendations
-        recommendations: [
-            'Maintain regular medical check-ups',
-            'Monitor blood glucose levels regularly',
-            'Engage in at least 150 minutes of moderate exercise per week',
-            'Maintain a balanced, low-glycemic diet',
-            'Aim for 7-9 hours of quality sleep per night',
-            'Reduce stress through meditation or relaxation techniques',
-            'Consult with a diabetes specialist or endocrinologist'
+                value: getMetric(result.diabetes_pedigree),
+                message: 'Genetic risk factor score: ' + getMetric(result.diabetes_pedigree),
+                'Engage in at least 150 minutes of moderate exercise per week',
+                'Maintain a balanced, low-glycemic diet',
+                'Aim for 7-9 hours of quality sleep per night',
+                'Reduce stress through meditation or relaxation techniques',
+                'Consult with a diabetes specialist or endocrinologist'
         ]
     };
 
