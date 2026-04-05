@@ -178,14 +178,27 @@ function savePredictionLocally(input, result) {
         const record = {
             id: Math.floor(Math.random() * 9000) + 1000,
             name: input.name || 'Anonymous',
+            email: input.email || null,
+            gender: input.gender || null,
             age: input.age,
             glucose: input.glucose,
+            blood_pressure: input.blood_pressure || 72,
+            insulin: input.insulin || 80,
+            skin_thickness: input.skin_thickness || 20,
             bmi: input.bmi,
+            diabetes_pedigree: input.diabetes_pedigree || 0.47,
+            pregnancies: input.pregnancies || 0,
+            exercise_hours: input.exercise_hours || 0,
+            sleep_hours: input.sleep_hours || 7,
+            smoking: input.smoking || false,
             health_score: result.health_score,
+            risk_probability: result.risk_probability,
             risk_level: result.risk_level,
+            summary: result.summary,
             created_at: new Date().toISOString()
         };
 
+        console.log('[CodeCure] Saving to local storage:', record);
         history.unshift(record);
         localStorage.setItem(storageKey, JSON.stringify(history.slice(0, 50)));
     } catch (e) { console.error("Local save failed:", e); }
@@ -460,7 +473,7 @@ function updateDashboardStats(data = null) {
     // If data is provided from API, use it for accurate total count
     // Otherwise, use dashboardDataStore for display counts
     let total;
-    
+
     if (data && data.total_patients !== undefined) {
         // Use server total for accurate count
         const localHistory = getLocalHistory();
