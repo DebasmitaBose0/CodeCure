@@ -392,13 +392,14 @@ function displayResults(result) {
         result.risk_factors.forEach(factor => {
             const card = document.createElement('div');
             card.className = 'risk-factor-card';
+            card.style.display = 'none'; // Hide from UI but keep in DOM for PDF capture
             card.innerHTML = `
                 <div class="risk-factor-header">
                     <span class="risk-factor-name">${factor.factor}</span>
                     <span class="risk-factor-status ${factor.status}">${factor.status}</span>
                 </div>
-                <div class="risk-factor-value" style="color: ${getStatusColor(factor.status)}">${factor.value}</div>
-                <p class="risk-factor-message">${factor.message}</p>
+                <div class="risk-factor-value">${factor.value}</div>
+                <div class="risk-factor-message">${factor.message}</div>
             `;
             factorsGrid.appendChild(card);
         });
@@ -409,19 +410,10 @@ function displayResults(result) {
     if (recsList) {
         recsList.innerHTML = '';
         result.recommendations.forEach(rec => {
-            const text = rec.replace(/^[^\w\s]+\s*/, '');
+            const text = rec.replace(/^[^\w\s]+\s*/, '').trim();
             const li = document.createElement('li');
             li.className = 'recommendation-item';
-            li.style.cssText = 'display: flex; align-items: flex-start; gap: 12px; padding: 12px; margin-bottom: 8px; border-radius: 8px; transition: background 0.2s;';
-            li.onmouseover = () => li.style.background = 'rgba(16, 185, 129, 0.05)';
-            li.onmouseout = () => li.style.background = 'transparent';
-
-            li.innerHTML = `
-                <span class="recommendation-icon" style="color: var(--primary-500); margin-top: 2px;">
-                    <i data-lucide="lightbulb" style="width: 20px; height: 20px;"></i>
-                </span>
-                <span style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.5; font-weight: 500;">${text}</span>
-            `;
+            li.innerHTML = `<span>${text}</span>`;
             recsList.appendChild(li);
         });
     }
@@ -790,15 +782,19 @@ function downloadPDF() {
         'Sleep Hours/Night': getVal('input-sleep') + ' hrs'
     };
 
+    const summaryEl = document.getElementById('result-summary');
+    const riskTextEl = document.getElementById('risk-text');
+    const probValEl = document.getElementById('probability-value');
+
     const data = {
         name: getVal('input-name') || 'Patient',
         email: getVal('input-email') || 'Not provided',
         age: getVal('input-age') || 'N/A',
         gender: getVal('input-gender') || 'Not specified',
         score: scoreEl.innerText,
-        risk: (document.getElementById('risk-text') && document.getElementById('risk-text').innerText) || 'Unknown',
-        summary: (document.getElementById('result-summary') && document.getElementById('result-summary').innerText) || 'No summary available.',
-        probability: (document.getElementById('probability-value') && document.getElementById('probability-value').innerText) || '—%',
+        risk: riskTextEl ? riskTextEl.innerText.replace(' Risk', '') : 'Unknown',
+        summary: summaryEl ? summaryEl.innerText : 'No summary available.',
+        probability: probValEl ? probValEl.innerText : '—%',
         metrics: metrics,
         factors: Array.from(document.querySelectorAll('.risk-factor-card')).map(card => {
             const name = card.querySelector('.risk-factor-name')?.innerText || 'Factor';
@@ -812,7 +808,7 @@ function downloadPDF() {
                 status: statusText.toLowerCase().replace('risk ', '').trim()
             };
         }),
-        recommendations: Array.from(document.querySelectorAll('.recommendation-item span:last-child')).map(rec => rec.innerText)
+        recommendations: Array.from(document.querySelectorAll('.recommendation-item span')).map(rec => rec.innerText)
     };
     generatePDFReport(data);
 }
