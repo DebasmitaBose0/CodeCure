@@ -610,36 +610,25 @@ function showPatientSummary(patientId) {
     });
     document.getElementById('modal-date').textContent = `Analyzed on ${dateStr} at ${timeStr}`;
 
-    // Personal Information
-    document.getElementById('modal-age').textContent = (patient.age || '—') + ' years';
+    // Show actual user-provided values
+    document.getElementById('modal-age').textContent = patient.age ? patient.age + ' years' : '—';
     document.getElementById('modal-gender').textContent = patient.gender || '—';
-    document.getElementById('modal-email').textContent = patient.email || '—';
 
-    // Clinical Metrics
-    document.getElementById('modal-glucose').textContent = (patient.glucose || '—') + ' mg/dL';
-    document.getElementById('modal-bp').textContent = (patient.blood_pressure || '—') + ' mmHg';
-    document.getElementById('modal-bmi').textContent = (patient.bmi || '—') + ' kg/m²';
-    document.getElementById('modal-insulin').textContent = (patient.insulin || '—') + ' mIU/L';
+    // Essential clinical metrics with units
+    document.getElementById('modal-glucose').textContent = patient.glucose ? patient.glucose + ' mg/dL' : '—';
+    document.getElementById('modal-bp').textContent = patient.blood_pressure ? patient.blood_pressure + ' mmHg' : '—';
+    document.getElementById('modal-bmi').textContent = patient.bmi ? patient.bmi + ' kg/m²' : '—';
+    document.getElementById('modal-insulin').textContent = patient.insulin ? patient.insulin + ' mIU/L' : '—';
 
-    // Metabolic Factors
-    document.getElementById('modal-skin').textContent = (patient.skin_thickness || '—') + ' mm';
-    document.getElementById('modal-pedigree').textContent = patient.diabetes_pedigree || '—';
-    document.getElementById('modal-pregnancies').textContent = patient.pregnancies || '0';
-
-    // Lifestyle Factors
-    document.getElementById('modal-exercise').textContent = (patient.exercise_hours || '0') + ' hrs/week';
-    document.getElementById('modal-sleep').textContent = (patient.sleep_hours || '7') + ' hrs/night';
-    document.getElementById('modal-smoking').textContent = patient.smoking ? 'Yes' : 'No';
-
-    // Health Score & Risk
-    document.getElementById('modal-score').textContent = (patient.health_score || '—') + '/100';
+    // AI Assessment Results
+    document.getElementById('modal-score').textContent = patient.health_score ? patient.health_score + '/100' : '—';
     document.getElementById('modal-probability').textContent = patient.risk_probability ? (patient.risk_probability * 100).toFixed(1) + '%' : '—';
 
     const riskEl = document.getElementById('modal-risk');
     riskEl.textContent = patient.risk_level || 'Unknown';
     riskEl.className = 'table-badge ' + (patient.risk_level || 'low').toLowerCase();
 
-    const summary = patient.summary || `Based on a glucose level of ${patient.glucose} and a BMI of ${patient.bmi}, the AI has categorized this patient as ${patient.risk_level}. Further medical consultation is advised.`;
+    const summary = patient.summary || `Based on the provided health metrics, the AI has categorized this patient as ${patient.risk_level}. Further medical consultation is advised.`;
     document.getElementById('modal-summary').textContent = summary;
 
     document.getElementById('patient-modal').classList.add('active');
