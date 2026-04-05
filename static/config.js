@@ -13,7 +13,7 @@ function getBackendURL() {
         const hostname = window.location.hostname;
 
         if (hostname.includes('vercel.app')) {
-            const backendUrl = 'https://codecure-api.onrender.com';
+            const backendUrl = 'https://codecure-backend-8yt5.onrender.com';
             console.log('[CodeCure Config] ✓ Vercel detected, using Render backend:', backendUrl);
             return backendUrl;
         }
@@ -40,7 +40,7 @@ function getBackendURL() {
     }
 
     // Fallback: Production Render URL
-    const fallbackUrl = 'https://codecure-api.onrender.com';
+    const fallbackUrl = 'https://codecure-backend-8yt5.onrender.com';
     console.log('[CodeCure Config] ✓ Using fallback Render backend:', fallbackUrl);
     return fallbackUrl;
 }
