@@ -690,7 +690,7 @@ async function downloadDashboardPDF(id) {
         return;
     }
 
-    // Collect health metrics from stored data
+    // Collect ALL health metrics to match the Prediction PDF logic exactly
     const metrics = {
         'Glucose Level': (result.glucose || '—') + ' mg/dL',
         'Blood Pressure': (result.blood_pressure || '—') + ' mmHg',
@@ -704,22 +704,18 @@ async function downloadDashboardPDF(id) {
         'Sleep Hours/Night': (result.sleep_hours || '7') + ' hrs'
     };
 
-    // Use the stored summary (explanation) if available
-    const summary = result.summary || `AI Diabetes Risk Assessment Report for Patient #${result.id}.`;
-    const risk = result.risk_level || (result.diabetes_risk === 1 ? 'High' : 'Low');
-    const score = result.health_score || 0;
-    const probability = (result.risk_probability ? (result.risk_probability * 100).toFixed(1) : '—') + '%';
-
+    // Construct the data object exactly like downloadPDF() does
     const data = {
-        name: result.name || 'Anonymous',
-        email: result.email || 'Patient Record #' + result.id,
+        name: result.name || 'Patient',
+        email: result.email || 'Not provided',
         age: result.age || 'N/A',
         gender: result.gender || 'Not specified',
-        score: score,
-        risk: risk,
-        summary: summary,
-        probability: probability,
+        score: Math.round(result.health_score || 0),
+        risk: result.risk_level || 'Unknown',
+        summary: result.summary || result.explanation || `AI Diabetes Risk Assessment Report for Patient #${result.id}.`,
+        probability: (result.risk_probability ? (result.risk_probability * 100).toFixed(1) : '—') + '%',
         metrics: metrics,
+        // Reconstruct factors for the PDF table
         factors: [
             {
                 name: 'Glucose Level',
@@ -748,10 +744,11 @@ async function downloadDashboardPDF(id) {
             {
                 name: 'Diabetes Pedigree',
                 value: result.diabetes_pedigree || '—',
-                message: 'Family history score: ' + (result.diabetes_pedigree || '—'),
+                message: 'Genetic risk factor score: ' + (result.diabetes_pedigree || '—'),
                 status: result.diabetes_pedigree > 0.5 ? 'warning' : 'normal'
             }
         ],
+        // Standard recommendations
         recommendations: [
             'Maintain regular medical check-ups',
             'Monitor blood glucose levels regularly',
@@ -759,10 +756,11 @@ async function downloadDashboardPDF(id) {
             'Maintain a balanced, low-glycemic diet',
             'Aim for 7-9 hours of quality sleep per night',
             'Reduce stress through meditation or relaxation techniques',
-            'Consult with a diabetes specialist or endocrinologist',
-            'Consider lifestyle modification programs if at high risk'
+            'Consult with a diabetes specialist or endocrinologist'
         ]
     };
+
+    // Call the same PDF generation engine
     generatePDFReport(data);
 }
 
