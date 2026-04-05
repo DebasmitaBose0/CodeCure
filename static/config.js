@@ -1,5 +1,5 @@
 // ═══════════════ CODECURE ENVIRONMENT CONFIGURATION ═══════════════
-// This file provides backend URL configuration for both local and production deployments
+// This file provides backend URL configuration for single-host Render deployment
 
 /**
  * Gets the appropriate backend URL based on environment
@@ -8,41 +8,18 @@
 function getBackendURL() {
     console.log('[CodeCure Config] Determining backend URL...');
 
-    // Priority 1: Check for Vercel deployment FIRST (most reliable)
+    // Since we are deploying frontend and backend together on Render,
+    // we use a relative path if the frontend matches the current host.
     if (typeof window !== 'undefined') {
         const hostname = window.location.hostname;
 
-        if (hostname.includes('vercel.app')) {
-            const backendUrl = 'https://codecure-backend-8yt5.onrender.com';
-            console.log('[CodeCure Config] ✓ Vercel detected, using Render backend:', backendUrl);
-            return backendUrl;
-        }
-
-        // Local development
-        if (hostname.includes('localhost') || hostname === '127.0.0.1') {
-            const backendUrl = 'http://localhost:8000';
-            console.log('[CodeCure Config] ✓ Local development detected, using localhost:', backendUrl);
-            return backendUrl;
-        }
+        // Single-host deployment (Frontend & Backend on same server)
+        // This is the most reliable way when serving static files via FastAPI
+        return window.location.origin;
     }
 
-    // Priority 2: Use Jinja2 injected value from template, but validate it's a real URL
-    if (typeof window !== 'undefined' && window.ENV && window.ENV.BACKEND_URL) {
-        const backendUrl = window.ENV.BACKEND_URL.trim();
-
-        // Skip if it's an unresolved Jinja2 template variable
-        if (backendUrl && !backendUrl.includes('{{') && !backendUrl.includes('}}') && backendUrl.startsWith('http')) {
-            console.log('[CodeCure Config] ✓ Using Jinja2 injected backend URL:', backendUrl);
-            return backendUrl;
-        } else if (backendUrl.includes('{{')) {
-            console.warn('[CodeCure Config] ⚠ Template variable not resolved, falling back to Render');
-        }
-    }
-
-    // Fallback: Production Render URL
-    const fallbackUrl = 'https://codecure-backend-8yt5.onrender.com';
-    console.log('[CodeCure Config] ✓ Using fallback Render backend:', fallbackUrl);
-    return fallbackUrl;
+    // Fallback for local development if everything else fails
+    return 'http://localhost:8000';
 }
 
 // Export for use in script.js

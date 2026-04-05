@@ -45,16 +45,12 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Add CORS middleware for frontend access from different domains
+# Add CORS middleware for frontend access
+# Since we're deploying as a single app on Render, we only really need local access,
+# but keeping CORS for flexibility if needed.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://code-cure.vercel.app",   # Production Frontend (Vercel)
-        "https://code-cure-*.vercel.app", # Vercel preview deployments
-        "http://localhost:3000",         # Local Frontend Dev
-        "http://localhost:8000",         # Local Backend Dev
-        "*"                              # Allow all for development
-    ],
+    allow_origins=["*"], # Allow all for simplicity in single-host deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
