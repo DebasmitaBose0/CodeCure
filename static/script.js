@@ -258,6 +258,11 @@ async function handlePrediction(event) {
     if (!btn) return;
     btn.classList.add('loading');
 
+    // Collect and parse form data carefully
+    const bpVal = parseFloat(document.getElementById('input-bp').value);
+    const insulinVal = parseFloat(document.getElementById('input-insulin').value);
+    const skinVal = parseFloat(document.getElementById('input-skin').value);
+
     const data = {
         device_id: getDeviceId(),
         name: document.getElementById('input-name').value || null,
@@ -266,15 +271,17 @@ async function handlePrediction(event) {
         age: parseInt(document.getElementById('input-age').value),
         glucose: parseFloat(document.getElementById('input-glucose').value),
         bmi: parseFloat(document.getElementById('input-bmi').value),
-        blood_pressure: parseFloat(document.getElementById('input-bp').value) !== '' ? parseFloat(document.getElementById('input-bp').value) : 72,
+        blood_pressure: !isNaN(bpVal) ? bpVal : 72,
         pregnancies: parseInt(document.getElementById('input-pregnancies').value) || 0,
-        skin_thickness: parseFloat(document.getElementById('input-skin').value) !== '' ? parseFloat(document.getElementById('input-skin').value) : 20,
-        insulin: parseFloat(document.getElementById('input-insulin').value) !== '' ? parseFloat(document.getElementById('input-insulin').value) : 80,
+        skin_thickness: !isNaN(skinVal) ? skinVal : 20,
+        insulin: !isNaN(insulinVal) ? insulinVal : 80,
         diabetes_pedigree: parseFloat(document.getElementById('input-dpf').value) || 0.47,
         exercise_hours: parseFloat(document.getElementById('input-exercise').value) || 0,
         sleep_hours: parseFloat(document.getElementById('input-sleep').value) || 7,
         smoking: document.getElementById('input-smoking').checked
     };
+
+    console.log('[CodeCure] Form Data Collected:', data);
 
     // Validate required fields
     if (!data.age || !data.glucose || !data.bmi) {
@@ -599,6 +606,8 @@ function renderDashboardTable(container) {
 function showPatientSummary(patientId) {
     const patient = dashboardDataStore.find(p => p.id === patientId);
     if (!patient) return;
+
+    console.log('[CodeCure] Displaying patient:', patient);
 
     document.getElementById('modal-name').textContent = patient.name || 'Anonymous Patient';
     const dateObj = new Date(patient.created_at);
