@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="icon" href="/static/favicon.png" type="image/png">
+    <!-- Load configuration helper (supports both local backend and Vercel) FIRST -->
+    <script src="/static/config.js"></script>
     <!-- PDF Generation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1177,8 +1179,6 @@
             BACKEND_URL: "{{ backend_url }}"
         };
     </script>
-    <!-- Load configuration helper (supports both local backend and Vercel) -->
-    <script src="/static/config.js"></script>
     <script src="/static/script.js"></script>
 </body>
 
