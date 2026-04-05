@@ -765,7 +765,6 @@ async function downloadDashboardPDF(id) {
     };
     generatePDFReport(data);
 }
-}
 
 function downloadPDF() {
     const scoreEl = document.getElementById('score-number');
